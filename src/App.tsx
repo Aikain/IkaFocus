@@ -9,13 +9,17 @@ import styles from '@/styles/app.module.scss';
 
 const App = () => {
     const [servers, setServers] = useState<Server[]>();
-    const [accounts, setAccounts] = useState<Account[]>([]);
+    const [accounts, setAccounts] = useState<Account[]>(JSON.parse(localStorage.getItem('accounts') ?? '[]') ?? []);
 
     useEffect(() => {
         fetch('/api/servers.json')
             .then((res) => res.json())
             .then(setServers);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem('accounts', JSON.stringify(accounts));
+    }, [accounts]);
 
     const addAccount = (account: Pick<Account, 'server' | 'name'>) =>
         setAccounts((accounts) => [...accounts, { ...account, islands: [] }]);

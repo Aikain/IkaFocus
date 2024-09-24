@@ -8,10 +8,11 @@ import styles from '@/styles/account.module.scss';
 
 interface Props {
     account: AccountType;
+    deleteAccount?: () => void;
     updateAccount: (account: AccountType) => void;
 }
 
-const Account = ({ account, updateAccount }: Props) => {
+const Account = ({ account, deleteAccount, updateAccount }: Props) => {
     const handleAddCity = (newIsland: Pick<Island, 'luxuryResource' | 'x' | 'y'>, city: City) => {
         const oldIsland = account.islands.find(({ x, y }) => x === newIsland.x && y === newIsland.y);
         updateAccount({
@@ -32,9 +33,12 @@ const Account = ({ account, updateAccount }: Props) => {
 
     return (
         <div className={styles.account}>
-            <h3>
-                {generateServerName(account.server)} - {account.name}
-            </h3>
+            <div className={styles.header}>
+                <h3>
+                    {generateServerName(account.server)} - {account.name}
+                </h3>
+                <button onClick={deleteAccount}>Poista tili</button>
+            </div>
             <IslandList islands={account.islands} updateIslands={handleUpdateIslands} />
             <AddCity addCity={handleAddCity} />
         </div>
