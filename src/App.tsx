@@ -17,12 +17,13 @@ const App = () => {
             .then(setServers);
     }, []);
 
-    const addAccount = (account: Account) => setAccounts((accounts) => [...accounts, account]);
+    const addAccount = (account: Pick<Account, 'server' | 'name'>) =>
+        setAccounts((accounts) => [...accounts, { ...account, islands: [] }]);
 
     return (
         <div className={styles.main}>
+            <AccountList accounts={accounts} setAccounts={setAccounts} />
             <AddAccount addAccount={addAccount} servers={servers} />
-            <AccountList accounts={accounts} />
         </div>
     );
 };

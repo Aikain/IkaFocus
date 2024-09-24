@@ -25,6 +25,7 @@
       "@/components/*": ["components/*"],
       "@/styles/*": ["styles/*"],
       "@/types": ["types"],
+      "@/utils": ["utils"],
     },
   },
   "include": ["src"]

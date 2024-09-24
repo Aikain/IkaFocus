@@ -1,13 +1,12 @@
 import { FormEvent } from 'react';
 
 import { Account, Server } from '@/types';
+import { generateServerName } from '@/utils';
 
 import styles from '@/styles/account.module.scss';
 
-import { generateServerName } from '../../utils.ts';
-
 interface Props {
-    addAccount: (account: Account) => void;
+    addAccount: (account: Pick<Account, 'name' | 'server'>) => void;
     servers?: Server[];
 }
 
@@ -19,13 +18,13 @@ const AddAccount = ({ addAccount, servers }: Props) => {
     const handleSubmit = (e: CustomHTMLFormElement) => {
         e.preventDefault();
         addAccount({
-            server: servers?.find(({ id }) => id === e.target.server.value)!,
             name: e.target.name.value,
+            server: servers?.find(({ id }) => id === e.target.server.value)!,
         });
     };
 
     return servers ? (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.addAccount} onSubmit={handleSubmit}>
             <h2>Lisää uusi tili</h2>
             <div className={styles.inputRow}>
                 <label htmlFor='server'>Maailma</label>
