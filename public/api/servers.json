@@ -1,0 +1,32 @@
+[
+    {
+        "id": "s59-en",
+        "community": "en",
+        "number": 59,
+        "bonuses": {
+            "wood": 35,
+            "marble": 35
+        }
+    },
+    {
+        "id": "s60-en",
+        "community": "en",
+        "number": 60,
+        "bonuses": {
+            "wood": 25,
+            "wine": 25,
+            "crystal": 25
+        }
+    },
+    {
+        "id": "s9-fi",
+        "community": "fi",
+        "number": 9,
+        "bonuses": {
+            "wood": 75,
+            "wine": 25,
+            "marble": 20,
+            "sulphur": 25
+        }
+    }
+]

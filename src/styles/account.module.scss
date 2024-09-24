@@ -1,0 +1,17 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+
+  .inputRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+
+    input, select {
+      width: 240px;
+      padding: 0;
+    }
+  }
+}
