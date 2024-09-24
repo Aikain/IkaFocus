@@ -51,6 +51,9 @@
 
 .islandList {
   .island {
+    display: flex;
+    flex-direction: column;
+
     padding: 1rem;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 
@@ -59,6 +62,21 @@
       flex-direction: row;
       gap: .5rem;
       align-items: baseline;
+    }
+
+    .cityTable {
+      th:first-child {
+        text-align: left;
+      }
+
+      .building {
+        width: 70px;
+
+        input[type=number] {
+          width: 100%;
+          text-align: center;
+        }
+      }
     }
   }
 }

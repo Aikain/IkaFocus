@@ -30,4 +30,11 @@ export interface Island {
 
 export interface City {
     name: string;
+    woodBoosterLevel?: number;
+    luxuryBoosterLevel?: number;
+    woodReduceLevel?: number;
+    wineReduceLevel?: number;
+    marbleReduceLevel?: number;
+    crystalReduceLevel?: number;
+    sulphurReduceLevel?: number;
 }
