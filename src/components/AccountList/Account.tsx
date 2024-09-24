@@ -1,5 +1,5 @@
-import { Account as AccountType, City, Island } from '@/types';
-import { generateServerName } from '@/utils';
+import { Account as AccountType, City, FormOfGovernment, Island } from '@/types';
+import { generateServerName, translateFormOfGovernment } from '@/utils';
 
 import AddCity from '@/components/AccountList/AddCity.tsx';
 import IslandList from '@/components/AccountList/IslandList.tsx';
@@ -13,6 +13,9 @@ interface Props {
 }
 
 const Account = ({ account, deleteAccount, updateAccount }: Props) => {
+    const handleChangeFormOfGovernment = (formOfGovernment: FormOfGovernment) =>
+        updateAccount({ ...account, formOfGovernment });
+
     const handleAddCity = (newIsland: Pick<Island, 'luxuryResource' | 'x' | 'y'>, city: City) => {
         const oldIsland = account.islands.find(({ x, y }) => x === newIsland.x && y === newIsland.y);
         updateAccount({
@@ -39,7 +42,32 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
                 </h3>
                 <button onClick={deleteAccount}>Poista tili</button>
             </div>
-            <IslandList islands={account.islands} updateIslands={handleUpdateIslands} />
+            <div className={styles.formOfGovernment}>
+                <label htmlFor='formOfGovernment'>Hallintomuoto</label>
+                <select
+                    id='formOfGovernment'
+                    value={account.formOfGovernment}
+                    onChange={(e) => handleChangeFormOfGovernment(e.target.value as FormOfGovernment)}
+                >
+                    {(
+                        [
+                            'IKACRACY',
+                            'ARISTOCRACY',
+                            'DEMOCRACY',
+                            'DICTATORSHIP',
+                            'NOMOCRACY',
+                            'OLIGARCHY',
+                            'TECHNOCRACY',
+                            'THEOCRACY',
+                        ] as FormOfGovernment[]
+                    ).map((formOfGovernment) => (
+                        <option key={formOfGovernment} value={formOfGovernment}>
+                            {translateFormOfGovernment(formOfGovernment)}
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <IslandList account={account} islands={account.islands} updateIslands={handleUpdateIslands} />
             <AddCity addCity={handleAddCity} />
         </div>
     );

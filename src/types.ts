@@ -11,9 +11,20 @@ export interface Server {
     };
 }
 
+export type FormOfGovernment =
+    | 'IKACRACY'
+    | 'ARISTOCRACY'
+    | 'DEMOCRACY'
+    | 'DICTATORSHIP'
+    | 'NOMOCRACY'
+    | 'OLIGARCHY'
+    | 'TECHNOCRACY'
+    | 'THEOCRACY';
+
 export interface Account {
     server: Server;
     name: string;
+    formOfGovernment: FormOfGovernment;
     islands: Island[];
 }
 
@@ -37,4 +48,5 @@ export interface City {
     marbleReduceLevel?: number;
     crystalReduceLevel?: number;
     sulphurReduceLevel?: number;
+    helpingHands?: boolean;
 }

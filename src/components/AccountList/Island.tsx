@@ -1,10 +1,13 @@
 import { ChangeEvent, ReactNode } from 'react';
 
-import { City, Island as IslandType, LuxuryResource } from '@/types';
+import { Account, City, Island as IslandType, LuxuryResource } from '@/types';
+
+import { calculateLuxuryProduction, calculateWoodProduction } from '@/components/AccountList/utils.ts';
 
 import styles from '@/styles/account.module.scss';
 
 interface Props {
+    account: Account;
     island: IslandType;
     updateIsland: (island: IslandType) => void;
 }
@@ -23,9 +26,9 @@ const LUXURY_RESOURCE: Record<LuxuryResource, ReactNode> = {
     SULPHUR: <img src='https://gf1.geo.gfsrv.net/cdn9b/5578a7dfa3e98124439cca4a387a61.png' alt='Rikki' />,
 };
 
-type Building = keyof Omit<City, 'name'>;
+type Building = keyof Omit<City, 'name' | 'helpingHands'>;
 
-const Island = ({ island, updateIsland }: Props) => {
+const Island = ({ account, island, updateIsland }: Props) => {
     const handleWoodLevelChange = (e: ChangeEvent<HTMLInputElement>) => {
         updateIsland({
             ...island,
@@ -45,6 +48,16 @@ const Island = ({ island, updateIsland }: Props) => {
             cities: [
                 ...island.cities.slice(0, index),
                 { ...island.cities[index], [building]: newValue },
+                ...island.cities.slice(index + 1),
+            ],
+        });
+
+    const handleHelpingHandsToggle = (index: number) => () =>
+        updateIsland({
+            ...island,
+            cities: [
+                ...island.cities.slice(0, index),
+                { ...island.cities[index], helpingHands: !island.cities[index].helpingHands },
                 ...island.cities.slice(index + 1),
             ],
         });
@@ -120,6 +133,7 @@ const Island = ({ island, updateIsland }: Props) => {
                                 alt='Ilotulite testialue'
                             />
                         </th>
+                        <th>AK</th>
                         <th>
                             <img
                                 src='https://gf1.geo.gfsrv.net/cdn19/c3527b2f694fb882563c04df6d8972.png'
@@ -179,6 +193,19 @@ const Island = ({ island, updateIsland }: Props) => {
                                     />
                                 </td>
                             ))}
+                            <td className={styles.helpingHands}>
+                                <input
+                                    type='checkbox'
+                                    checked={rest.helpingHands ?? false}
+                                    onChange={handleHelpingHandsToggle(index)}
+                                />
+                            </td>
+                            <td className={styles.production}>
+                                {calculateWoodProduction(island, rest, account).toFixed(0)} / h
+                            </td>
+                            <td className={styles.production}>
+                                {calculateLuxuryProduction(island, rest, account).toFixed(0)} / h
+                            </td>
                         </tr>
                     ))}
                 </tbody>
