@@ -13,6 +13,7 @@ import styles from '@/styles/account.module.scss';
 
 interface Props {
     account: Account;
+    deleteIsland: () => void;
     island: IslandType;
     updateIsland: (island: IslandType) => void;
 }
@@ -45,7 +46,7 @@ const BUILDINGS: { name: Building; min: number; max: number }[] = [
     { name: 'sulphurReduceLevel', min: 0, max: 50 },
 ];
 
-const Island = ({ account, island, updateIsland }: Props) => {
+const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
     const handleWoodLevelChange = (e: ChangeEvent<HTMLInputElement>) => {
         updateIsland({
             ...island,
@@ -89,6 +90,9 @@ const Island = ({ account, island, updateIsland }: Props) => {
             ],
         });
 
+    const handleCityDelete = (index: number) => () =>
+        updateIsland({ ...island, cities: [...island.cities.slice(0, index), ...island.cities.slice(index + 1)] });
+
     return (
         <div className={styles.island}>
             <div className={styles.islandDetails}>
@@ -118,10 +122,14 @@ const Island = ({ account, island, updateIsland }: Props) => {
                         max={60}
                     />
                 </div>
+                <div className={styles.islandDeleteButton}>
+                    <button onClick={deleteIsland}>Poista saari</button>
+                </div>
             </div>
             <table className={styles.cityTable}>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Kaupungin nimi</th>
                         <th>Valittu jumala</th>
                         <th className={styles.building}>
@@ -187,6 +195,9 @@ const Island = ({ account, island, updateIsland }: Props) => {
                 <tbody>
                     {island.cities.map(({ name, ...rest }, index) => (
                         <tr key={index}>
+                            <td className={styles.cityDelete}>
+                                <button onClick={handleCityDelete(index)}>X</button>
+                            </td>
                             <td>{name}</td>
                             <td>
                                 <select

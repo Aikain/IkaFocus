@@ -76,10 +76,18 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 
     .islandDetails {
+      position: relative;
+
       display: flex;
       flex-direction: row;
       gap: .5rem;
       align-items: baseline;
+
+      .islandDeleteButton {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
 
     .cityTable {
@@ -87,6 +95,10 @@
 
       th:first-child {
         text-align: left;
+      }
+
+      .cityDelete {
+        padding-right: .5rem;
       }
 
       .building {

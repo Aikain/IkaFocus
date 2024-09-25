@@ -14,10 +14,19 @@ const IslandList = ({ account, islands, updateIslands }: Props) => {
     const handleUpdateIsland = (index: number) => (island: IslandType) =>
         updateIslands([...islands.slice(0, index), island, ...islands.slice(index + 1)]);
 
+    const handleDeleteIsland = (index: number) => () =>
+        updateIslands([...islands.slice(0, index), ...islands.slice(index + 1)]);
+
     return (
         <div className={styles.islandList}>
             {islands.map((island, index) => (
-                <Island key={index} account={account} island={island} updateIsland={handleUpdateIsland(index)} />
+                <Island
+                    key={index}
+                    account={account}
+                    deleteIsland={handleDeleteIsland(index)}
+                    island={island}
+                    updateIsland={handleUpdateIsland(index)}
+                />
             ))}
         </div>
     );
