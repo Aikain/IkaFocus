@@ -225,10 +225,16 @@ const Island = ({ account, island, updateIsland }: Props) => {
                                 />
                             </td>
                             <td className={styles.production}>
-                                {calculateWoodProduction(island, rest, account).toFixed(0)} / h
+                                {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+                                    calculateWoodProduction(island, rest, account),
+                                )}
+                                /h
                             </td>
                             <td className={styles.production}>
-                                {calculateLuxuryProduction(island, rest, account).toFixed(0)} / h
+                                {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+                                    calculateLuxuryProduction(island, rest, account),
+                                )}
+                                /h
                             </td>
                         </tr>
                     ))}

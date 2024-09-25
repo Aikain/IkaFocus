@@ -41,8 +41,14 @@ const NextSteps = ({ account }: Props) => {
                 {nextSteps.map((nextStep, index) => (
                     <tr key={index}>
                         <td dangerouslySetInnerHTML={{ __html: generateStepText(nextStep) }} />
-                        <td>+ {nextStep.productionIncrease.toFixed(0)} / h.</td>
-                        <td>{nextStep.cost}</td>
+                        <td>
+                            +
+                            {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+                                nextStep.productionIncrease,
+                            )}
+                            /h
+                        </td>
+                        <td>{new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(nextStep.cost)}</td>
                         <td>{getRelativeTimeString(nextStep.paybackTime * 3600)}</td>
                     </tr>
                 ))}
