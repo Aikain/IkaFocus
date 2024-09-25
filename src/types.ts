@@ -25,6 +25,7 @@ export interface Account {
     server: Server;
     name: string;
     formOfGovernment: FormOfGovernment;
+    shrineLevel: number;
     islands: Island[];
 }
 
@@ -39,6 +40,8 @@ export interface Island {
     cities: City[];
 }
 
+export type God = 'PAN' | 'DIONYSUS' | 'TYCHE' | 'PLUTUS' | 'THEIA' | 'HEPHAESTUS';
+
 export interface City {
     name: string;
     woodBoosterLevel?: number;
@@ -48,6 +51,8 @@ export interface City {
     marbleReduceLevel?: number;
     crystalReduceLevel?: number;
     sulphurReduceLevel?: number;
+    shrineLevel?: number;
+    selectedGod?: God;
     helpingHands?: boolean;
 }
 
@@ -62,9 +67,9 @@ export interface UpgradeIslandProduction extends AbstractNextStep {
     target: Island;
 }
 
-export interface UpgradeBooster extends AbstractNextStep {
-    type: 'UPGRADE_WOOD_BOOSTER' | 'UPGRADE_LUXURY_BOOSTER';
+export interface UpgradeBuilding extends AbstractNextStep {
+    type: 'UPGRADE_WOOD_BOOSTER' | 'UPGRADE_LUXURY_BOOSTER' | 'UPGRADE_SHRINE';
     target: City;
 }
 
-export type NextStep = UpgradeIslandProduction | UpgradeBooster;
+export type NextStep = UpgradeIslandProduction | UpgradeBuilding;

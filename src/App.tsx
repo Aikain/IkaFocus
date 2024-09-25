@@ -22,7 +22,10 @@ const App = () => {
     }, [accounts]);
 
     const addAccount = (account: Pick<Account, 'server' | 'name'>) =>
-        setAccounts((accounts) => [...accounts, { ...account, formOfGovernment: 'IKACRACY', islands: [] }]);
+        setAccounts((accounts) => [
+            ...accounts,
+            { ...account, formOfGovernment: 'IKACRACY', shrineLevel: 0, islands: [] },
+        ]);
 
     return (
         <div className={styles.main}>

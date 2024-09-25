@@ -1,6 +1,7 @@
 import { ChangeEvent, ReactNode } from 'react';
 
-import { Account, City, Island as IslandType, LuxuryResource } from '@/types';
+import { Account, City, God, Island as IslandType, LuxuryResource } from '@/types';
+import { translateGod } from '@/utils';
 
 import { calculateLuxuryProduction, calculateWoodProduction } from '@/components/AccountList/utils.ts';
 
@@ -26,7 +27,18 @@ const LUXURY_RESOURCE: Record<LuxuryResource, ReactNode> = {
     SULPHUR: <img src='https://gf1.geo.gfsrv.net/cdn9b/5578a7dfa3e98124439cca4a387a61.png' alt='Rikki' />,
 };
 
-type Building = keyof Omit<City, 'name' | 'helpingHands'>;
+type Building = keyof Omit<City, 'name' | 'helpingHands' | 'selectedGod'>;
+
+const BUILDINGS: { name: Building; min: number; max: number }[] = [
+    { name: 'woodBoosterLevel', min: 0, max: 61 },
+    { name: 'luxuryBoosterLevel', min: 0, max: 61 },
+    { name: 'shrineLevel', min: 0, max: 41 },
+    { name: 'woodReduceLevel', min: 0, max: 50 },
+    { name: 'wineReduceLevel', min: 0, max: 50 },
+    { name: 'marbleReduceLevel', min: 0, max: 50 },
+    { name: 'crystalReduceLevel', min: 0, max: 50 },
+    { name: 'sulphurReduceLevel', min: 0, max: 50 },
+];
 
 const Island = ({ account, island, updateIsland }: Props) => {
     const handleWoodLevelChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +52,16 @@ const Island = ({ account, island, updateIsland }: Props) => {
         updateIsland({
             ...island,
             luxuryLevel: e.target.value === '' ? 1 : Math.min(Math.max(parseInt(e.target.value), 1), 60),
+        });
+
+    const handleChangeGod = (index: number, selectedGod?: God) =>
+        updateIsland({
+            ...island,
+            cities: [
+                ...island.cities.slice(0, index),
+                { ...island.cities[index], selectedGod },
+                ...island.cities.slice(index + 1),
+            ],
         });
 
     const handleBuildLevelChange = (index: number, building: Building, newValue?: number) =>
@@ -96,6 +118,7 @@ const Island = ({ account, island, updateIsland }: Props) => {
                 <thead>
                     <tr>
                         <th>Kaupungin nimi</th>
+                        <th>Valittu jumala</th>
                         <th className={styles.building}>
                             <img
                                 src='https://gf1.geo.gfsrv.net/cdn86/102a0c388301526586234c78b9ae59.png'
@@ -103,6 +126,12 @@ const Island = ({ account, island, updateIsland }: Props) => {
                             />
                         </th>
                         <th className={styles.building}>{LUXURY_BOOSTERS[island.luxuryResource]}</th>
+                        <th className={styles.building}>
+                            <img
+                                src='https://gf1.geo.gfsrv.net/cdn15/7e44e05f5243c2d4f82d9bf62db927.png'
+                                alt='Jumalien pyhäkkö'
+                            />
+                        </th>
                         <th className={styles.building}>
                             <img
                                 src='https://gf3.geo.gfsrv.net/cdn84/9fbac676e42d5178c554b02ce07c22.png'
@@ -147,49 +176,44 @@ const Island = ({ account, island, updateIsland }: Props) => {
                     {island.cities.map(({ name, ...rest }, index) => (
                         <tr key={index}>
                             <td>{name}</td>
-                            {(['woodBoosterLevel', 'luxuryBoosterLevel'] as Building[]).map((building) => (
-                                <td key={building} className={styles.building}>
+                            <td>
+                                <select
+                                    value={rest.selectedGod}
+                                    onChange={(e) =>
+                                        handleChangeGod(index, (e.target.value || undefined) as God | undefined)
+                                    }
+                                >
+                                    <option value=''>-</option>
+                                    {(['PAN', 'DIONYSUS', 'PLUTUS', 'TYCHE', 'THEIA', 'HEPHAESTUS'] as God[]).map(
+                                        (god) => (
+                                            <option key={god} value={god}>
+                                                {translateGod(god)}
+                                            </option>
+                                        ),
+                                    )}
+                                </select>
+                            </td>
+                            {BUILDINGS.map(({ name, min, max }) => (
+                                <td key={name} className={styles.building}>
                                     <input
                                         type='number'
-                                        value={rest[building] ?? ''}
+                                        value={rest[name] ?? ''}
                                         onChange={(e) =>
                                             handleBuildLevelChange(
                                                 index,
-                                                building,
+                                                name,
                                                 e.target.value !== ''
-                                                    ? Math.min(Math.max(parseInt(e.target.value), 0), 61)
+                                                    ? Math.min(Math.max(parseInt(e.target.value), min), max)
                                                     : undefined,
                                             )
                                         }
-                                        min={0}
-                                        max={61}
-                                    />
-                                </td>
-                            ))}
-                            {(
-                                [
-                                    'woodReduceLevel',
-                                    'wineReduceLevel',
-                                    'marbleReduceLevel',
-                                    'crystalReduceLevel',
-                                    'sulphurReduceLevel',
-                                ] as Building[]
-                            ).map((building) => (
-                                <td key={building} className={styles.building}>
-                                    <input
-                                        type='number'
-                                        value={rest[building] ?? ''}
-                                        onChange={(e) =>
-                                            handleBuildLevelChange(
-                                                index,
-                                                building,
-                                                e.target.value !== ''
-                                                    ? Math.min(Math.max(parseInt(e.target.value), 0), 50)
-                                                    : undefined,
-                                            )
+                                        min={min}
+                                        max={max}
+                                        disabled={
+                                            name === 'shrineLevel' &&
+                                            rest.shrineLevel === undefined &&
+                                            account.shrineLevel !== 0
                                         }
-                                        min={0}
-                                        max={50}
                                     />
                                 </td>
                             ))}

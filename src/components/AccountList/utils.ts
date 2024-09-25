@@ -1,13 +1,4 @@
-import {
-    Account,
-    City,
-    Island,
-    LuxuryResource,
-    NextStep,
-    Server,
-    UpgradeBooster,
-    UpgradeIslandProduction,
-} from '@/types';
+import { Account, City, God, Island, LuxuryResource, NextStep, Server } from '@/types';
 
 const WOOD: Record<number, { donation: number; maxWorker: number }> = {
     1: { donation: 0, maxWorker: 30 },
@@ -263,17 +254,73 @@ const LUXURY_BOOSTER: Record<number, { wood: number; marble: number }> = {
     61: { wood: 4426399083, marble: 2455457089 },
 };
 
+const SHRINE: Record<number, { wood: number; wine: number; marble: number; crystal: number; sulphur: number }> = {
+    1: { wood: 890, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
+    2: { wood: 1116, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
+    3: { wood: 1400, wine: 124, marble: 0, crystal: 0, sulphur: 0 },
+    4: { wood: 1755, wine: 155, marble: 0, crystal: 0, sulphur: 0 },
+    5: { wood: 2201, wine: 194, marble: 231, crystal: 0, sulphur: 0 },
+    6: { wood: 2760, wine: 243, marble: 299, crystal: 0, sulphur: 0 },
+    7: { wood: 3461, wine: 305, marble: 386, crystal: 0, sulphur: 0 },
+    8: { wood: 4340, wine: 381, marble: 499, crystal: 0, sulphur: 0 },
+    9: { wood: 5442, wine: 478, marble: 646, crystal: 268, sulphur: 0 },
+    10: { wood: 6824, wine: 598, marble: 835, crystal: 347, sulphur: 0 },
+    11: { wood: 8558, wine: 749, marble: 1079, crystal: 448, sulphur: 133 },
+    12: { wood: 10732, wine: 937, marble: 1396, crystal: 579, sulphur: 178 },
+    13: { wood: 13457, wine: 1173, marble: 1805, crystal: 749, sulphur: 239 },
+    14: { wood: 16876, wine: 1469, marble: 2333, crystal: 969, sulphur: 320 },
+    15: { wood: 21162, wine: 1839, marble: 3017, crystal: 1252, sulphur: 429 },
+    16: { wood: 26537, wine: 2303, marble: 3901, crystal: 1619, sulphur: 575 },
+    17: { wood: 33277, wine: 2883, marble: 5044, crystal: 2094, sulphur: 770 },
+    18: { wood: 41730, wine: 3610, marble: 6522, crystal: 2707, sulphur: 1032 },
+    19: { wood: 52329, wine: 4520, marble: 8433, crystal: 3500, sulphur: 1383 },
+    20: { wood: 65621, wine: 5658, marble: 10904, crystal: 4526, sulphur: 1853 },
+    21: { wood: 82289, wine: 7084, marble: 14099, crystal: 5852, sulphur: 2483 },
+    22: { wood: 103190, wine: 8870, marble: 18230, crystal: 7567, sulphur: 3327 },
+    23: { wood: 129400, wine: 11105, marble: 23571, crystal: 9784, sulphur: 4458 },
+    24: { wood: 162268, wine: 13903, marble: 30478, crystal: 12651, sulphur: 5973 },
+    25: { wood: 203484, wine: 17407, marble: 39408, crystal: 16357, sulphur: 8004 },
+    26: { wood: 255169, wine: 21793, marble: 50954, crystal: 21150, sulphur: 10726 },
+    27: { wood: 319982, wine: 27285, marble: 65884, crystal: 27347, sulphur: 14372 },
+    28: { wood: 401258, wine: 34161, marble: 85188, crystal: 35360, sulphur: 19259 },
+    29: { wood: 503177, wine: 42770, marble: 110148, crystal: 45720, sulphur: 25807 },
+    30: { wood: 630984, wine: 53547, marble: 142421, crystal: 59116, sulphur: 34581 },
+    31: { wood: 791254, wine: 67041, marble: 184151, crystal: 76437, sulphur: 46339 },
+    32: { wood: 992233, wine: 83936, marble: 238107, crystal: 98833, sulphur: 62094 },
+    33: { wood: 1244260, wine: 105088, marble: 307872, crystal: 127791, sulphur: 83206 },
+    34: { wood: 1560302, wine: 131570, marble: 398079, crystal: 165233, sulphur: 111497 },
+    35: { wood: 1956619, wine: 164725, marble: 514716, crystal: 213647, sulphur: 149406 },
+    36: { wood: 2453600, wine: 206236, marble: 665528, crystal: 276245, sulphur: 200203 },
+    37: { wood: 3076815, wine: 258208, marble: 860528, crystal: 357185, sulphur: 268273 },
+    38: { wood: 3858325, wine: 323276, marble: 1112662, crystal: 461841, sulphur: 359485 },
+    39: { wood: 4838340, wine: 404741, marble: 1438672, crystal: 597160, sulphur: 481710 },
+    40: { wood: 6067278, wine: 506736, marble: 1860203, crystal: 772128, sulphur: 645492 },
+    41: { wood: 7608367, wine: 634434, marble: 2405243, crystal: 998361, sulphur: 864959 },
+};
+
+// TODO: premium
+// TODO: Cinetheatre
+// TODO: Helios
+// TODO: corruption
 export const calculateWoodProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
     WOOD[island.woodLevel].maxWorker *
     (city.helpingHands ? (account.formOfGovernment === 'TECHNOCRACY' ? 1.15 : 1.125) : 1) *
     (1 + (account.server.bonuses.wood ?? 0) / 100) *
-    (1 + 0.02 * (city.woodBoosterLevel ?? 0));
+    (1 + 0.02 * (city.woodBoosterLevel ?? 0)) *
+    (account.shrineLevel !== 0 && city.selectedGod === 'PAN' ? 1.04 + 0.02 * account.shrineLevel : 1);
 
+// TODO: premium
+// TODO: Cinetheatre
+// TODO: Helios
+// TODO: corruption
 export const calculateLuxuryProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
     LUXURY[island.luxuryLevel].maxWorker *
     (city.helpingHands ? 1.125 : 1) *
     (1 + (getLuxuryBonus(account.server, island.luxuryResource) ?? 0) / 100) *
-    (1 + 0.02 * (city.luxuryBoosterLevel ?? 0));
+    (1 + 0.02 * (city.luxuryBoosterLevel ?? 0)) *
+    (account.shrineLevel !== 0 && city.selectedGod && isGodActive(city.selectedGod, island.luxuryResource)
+        ? 1.04 + 0.02 * account.shrineLevel
+        : 1);
 
 const getLuxuryBonus = (server: Server, luxury: LuxuryResource): number | undefined => {
     switch (luxury) {
@@ -287,6 +334,12 @@ const getLuxuryBonus = (server: Server, luxury: LuxuryResource): number | undefi
             return server.bonuses.sulphur;
     }
 };
+
+const isGodActive = (god: God, luxury: LuxuryResource): boolean =>
+    (god === 'DIONYSUS' && luxury === 'WINE') ||
+    (god === 'TYCHE' && luxury === 'MARBLE') ||
+    (god === 'THEIA' && luxury === 'CRYSTAL') ||
+    (god === 'HEPHAESTUS' && luxury === 'SULPHUR');
 
 const calculateBuildTotalCost = (
     {
@@ -306,80 +359,108 @@ const calculateBuildTotalCost = (
 
 export const calculateNextSteps = (account: Account): NextStep[] =>
     [
-        ...account.islands.flatMap(
-            (island) =>
-                [
-                    {
-                        productionIncrease:
-                            island.cities.reduce(
-                                (total, city) =>
-                                    total +
-                                    calculateWoodProduction(
-                                        { ...island, woodLevel: island.woodLevel + 1 },
-                                        city,
-                                        account,
-                                    ),
-                                0,
-                            ) -
-                            island.cities.reduce(
-                                (total, city) => total + calculateWoodProduction(island, city, account),
-                                0,
+        // TODO: filter max
+        ...account.islands.flatMap((island) => [
+            {
+                type: 'UPGRADE_WOOD' as const,
+                target: island,
+                productionIncrease:
+                    island.cities.reduce(
+                        (total, city) =>
+                            total +
+                            calculateWoodProduction({ ...island, woodLevel: island.woodLevel + 1 }, city, account),
+                        0,
+                    ) -
+                    island.cities.reduce((total, city) => total + calculateWoodProduction(island, city, account), 0),
+                cost: WOOD[island.woodLevel + 1].donation,
+            },
+            {
+                type: 'UPGRADE_LUXURY' as const,
+                target: island,
+                productionIncrease:
+                    island.cities.reduce(
+                        (total, city) =>
+                            total +
+                            calculateLuxuryProduction(
+                                { ...island, luxuryLevel: island.luxuryLevel + 1 },
+                                city,
+                                account,
                             ),
-                        cost: WOOD[island.woodLevel + 1].donation,
-                        type: 'UPGRADE_WOOD',
-                        target: island,
-                    },
-                    {
-                        productionIncrease:
-                            island.cities.reduce(
-                                (total, city) =>
-                                    total +
-                                    calculateLuxuryProduction(
-                                        { ...island, luxuryLevel: island.luxuryLevel + 1 },
-                                        city,
-                                        account,
-                                    ),
-                                0,
-                            ) -
-                            island.cities.reduce(
-                                (total, city) => total + calculateLuxuryProduction(island, city, account),
-                                0,
-                            ),
-                        cost: LUXURY[island.luxuryLevel + 1].donation,
-                        type: 'UPGRADE_LUXURY',
-                        target: island,
-                    },
-                ] as UpgradeIslandProduction[],
-        ),
+                        0,
+                    ) -
+                    island.cities.reduce((total, city) => total + calculateLuxuryProduction(island, city, account), 0),
+                cost: LUXURY[island.luxuryLevel + 1].donation,
+            },
+        ]),
+        // TODO: filter max
         ...account.islands.flatMap((island) =>
-            island.cities.flatMap(
-                (city) =>
-                    [
-                        {
-                            productionIncrease:
-                                calculateWoodProduction(
-                                    island,
-                                    { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
-                                    account,
-                                ) - calculateWoodProduction(island, city, account),
-                            cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
-                            type: 'UPGRADE_WOOD_BOOSTER',
-                            target: city,
-                        },
-                        {
-                            productionIncrease:
-                                calculateLuxuryProduction(
-                                    island,
-                                    { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
-                                    account,
-                                ) - calculateLuxuryProduction(island, city, account),
-                            cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
-                            type: 'UPGRADE_LUXURY_BOOSTER',
-                            target: city,
-                        },
-                    ] as UpgradeBooster[],
-            ),
+            island.cities.flatMap((city) => [
+                {
+                    type: 'UPGRADE_WOOD_BOOSTER' as const,
+                    target: city,
+                    productionIncrease:
+                        calculateWoodProduction(
+                            island,
+                            { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
+                            account,
+                        ) - calculateWoodProduction(island, city, account),
+                    cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
+                },
+                {
+                    type: 'UPGRADE_LUXURY_BOOSTER' as const,
+                    target: city,
+                    productionIncrease:
+                        calculateLuxuryProduction(
+                            island,
+                            { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
+                            account,
+                        ) - calculateLuxuryProduction(island, city, account),
+                    cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
+                },
+            ]),
         ),
+        ...findCityForShrine(account).map((city) => ({
+            productionIncrease:
+                account.islands.reduce(
+                    (total, island) =>
+                        total +
+                        island.cities.reduce(
+                            (total, city) =>
+                                total +
+                                calculateWoodProduction(island, city, {
+                                    ...account,
+                                    shrineLevel: account.shrineLevel + 1,
+                                }) +
+                                calculateLuxuryProduction(island, city, {
+                                    ...account,
+                                    shrineLevel: account.shrineLevel + 1,
+                                }),
+                            0,
+                        ),
+                    0,
+                ) -
+                account.islands.reduce(
+                    (total, island) =>
+                        total +
+                        island.cities.reduce(
+                            (total, city) =>
+                                total +
+                                calculateWoodProduction(island, city, account) +
+                                calculateLuxuryProduction(island, city, account),
+                            0,
+                        ),
+                    0,
+                ),
+            cost: calculateBuildTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city),
+            type: 'UPGRADE_SHRINE' as const,
+            target: city,
+        })),
     ]
+        .filter(({ productionIncrease }) => productionIncrease !== 0)
         .map((nextStep) => ({ ...nextStep, paybackTime: nextStep.cost / nextStep.productionIncrease }))
         .sort((a, b) => a.paybackTime - b.paybackTime);
+
+const findCityForShrine = ({ islands, shrineLevel }: Account): City[] =>
+    islands
+        .flatMap((island) => island.cities.filter((city) => city.shrineLevel !== undefined || shrineLevel === 0))
+        .filter(({ shrineLevel }) => (shrineLevel ?? 0) < 41);

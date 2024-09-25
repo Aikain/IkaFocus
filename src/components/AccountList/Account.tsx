@@ -1,6 +1,7 @@
-import { Account as AccountType, City, FormOfGovernment, Island } from '@/types';
-import { generateServerName, translateFormOfGovernment } from '@/utils';
+import { Account as AccountType, City, Island } from '@/types';
+import { generateServerName } from '@/utils';
 
+import AccountDetails from '@/components/AccountList/AccountDetails.tsx';
 import AddCity from '@/components/AccountList/AddCity.tsx';
 import IslandList from '@/components/AccountList/IslandList.tsx';
 import NextSteps from '@/components/AccountList/NextSteps.tsx';
@@ -9,14 +10,11 @@ import styles from '@/styles/account.module.scss';
 
 interface Props {
     account: AccountType;
-    deleteAccount?: () => void;
+    deleteAccount: () => void;
     updateAccount: (account: AccountType) => void;
 }
 
 const Account = ({ account, deleteAccount, updateAccount }: Props) => {
-    const handleChangeFormOfGovernment = (formOfGovernment: FormOfGovernment) =>
-        updateAccount({ ...account, formOfGovernment });
-
     const handleAddCity = (newIsland: Pick<Island, 'luxuryResource' | 'x' | 'y'>, city: City) => {
         const oldIsland = account.islands.find(({ x, y }) => x === newIsland.x && y === newIsland.y);
         updateAccount({
@@ -33,7 +31,15 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
         });
     };
 
-    const handleUpdateIslands = (islands: Island[]) => updateAccount({ ...account, islands });
+    const handleUpdateIslands = (islands: Island[]) =>
+        updateAccount({
+            ...account,
+            shrineLevel:
+                islands
+                    .flatMap(({ cities }) => cities.map(({ shrineLevel }) => shrineLevel))
+                    .find((shrineLevel) => shrineLevel !== undefined) ?? 0,
+            islands,
+        });
 
     return (
         <div className={styles.account}>
@@ -43,31 +49,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
                 </h3>
                 <button onClick={deleteAccount}>Poista tili</button>
             </div>
-            <div className={styles.formOfGovernment}>
-                <label htmlFor='formOfGovernment'>Hallintomuoto</label>
-                <select
-                    id='formOfGovernment'
-                    value={account.formOfGovernment}
-                    onChange={(e) => handleChangeFormOfGovernment(e.target.value as FormOfGovernment)}
-                >
-                    {(
-                        [
-                            'IKACRACY',
-                            'ARISTOCRACY',
-                            'DEMOCRACY',
-                            'DICTATORSHIP',
-                            'NOMOCRACY',
-                            'OLIGARCHY',
-                            'TECHNOCRACY',
-                            'THEOCRACY',
-                        ] as FormOfGovernment[]
-                    ).map((formOfGovernment) => (
-                        <option key={formOfGovernment} value={formOfGovernment}>
-                            {translateFormOfGovernment(formOfGovernment)}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <AccountDetails account={account} updateAccount={updateAccount} />
             <IslandList account={account} islands={account.islands} updateIslands={handleUpdateIslands} />
             <AddCity addCity={handleAddCity} />
             <NextSteps account={account} />

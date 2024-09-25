@@ -20,7 +20,9 @@ const generateStepText = ({ target, type }: NextStep): string =>
             ? `Päivitä <b>metsähoitajan talo</b> kaupungissa <b>${target.name}</b> tasosta ${target.woodBoosterLevel ?? 0} tasolle ${(target.woodBoosterLevel ?? 0) + 1}`
             : type === 'UPGRADE_LUXURY_BOOSTER'
               ? `Päivitä <b>yleellisyysresurssin</b> lisääjä kaupungissa <b>${target.name}</b> tasosta ${target.luxuryBoosterLevel ?? 0} tasolle ${(target.luxuryBoosterLevel ?? 0) + 1}`
-              : '';
+              : type === 'UPGRADE_SHRINE'
+                ? `Päivitä <b>Jumalien pyhäkkö</b> kaupungissa <b>${target.name}</b> tasosta ${target.shrineLevel ?? 0} tasoon ${(target.shrineLevel ?? 0) + 1}`
+                : '';
 
 const NextSteps = ({ account }: Props) => {
     const nextSteps = useMemo(() => calculateNextSteps(account), [account]);

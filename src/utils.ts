@@ -1,4 +1,4 @@
-import { FormOfGovernment, Island, Server } from '@/types';
+import { FormOfGovernment, God, Island, Server } from '@/types';
 
 const translateServerNumberToName = (number: number): string => {
     switch (number) {
@@ -51,4 +51,21 @@ export const getRelativeTimeString = (seconds: number): string => {
         Math.floor(deltaSeconds / divisor),
         units[unitIndex],
     );
+};
+
+export const translateGod = (god: God): string => {
+    switch (god) {
+        case 'PAN':
+            return 'Pan (Puu)';
+        case 'DIONYSUS':
+            return 'Dionysus (Viini)';
+        case 'TYCHE':
+            return 'Tyche (Marmori)';
+        case 'PLUTUS':
+            return 'Plutus (Kulta)';
+        case 'THEIA':
+            return 'Theia (Kristalli)';
+        case 'HEPHAESTUS':
+            return 'Hephaestus (Rikki)';
+    }
 };
