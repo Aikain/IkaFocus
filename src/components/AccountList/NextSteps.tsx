@@ -25,7 +25,7 @@ const generateStepText = ({ target, type }: NextStep): string =>
                 : type === 'UPGRADE_COVERNOR'
                   ? `Päivitä <b>Kuvernöörin asunto</b> kaupungissa <b>${target.name}</b> tasosta ${target.governorLevel ?? 0} tasoon ${(target.governorLevel ?? 0) + 1}`
                   : type === 'CREATE_NEW_CITY'
-                    ? `Luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b>`}`
+                    ? `Päivitä tarvittavat kuvernöörien asunnot, luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b> ja päivitä sen kuvernöörin asunto`}`
                     : '';
 
 const NextSteps = ({ account }: Props) => {
