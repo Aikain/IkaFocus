@@ -35,6 +35,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
     const handleUpdateIslands = (islands: Island[]) =>
         updateAccount({
             ...account,
+            cityCount: islands.reduce((total, island) => total + island.cities.length, 0),
             shrineLevel:
                 islands
                     .flatMap(({ cities }) => cities.map(({ shrineLevel }) => shrineLevel))
