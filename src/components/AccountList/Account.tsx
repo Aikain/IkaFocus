@@ -19,6 +19,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
         const oldIsland = account.islands.find(({ x, y }) => x === newIsland.x && y === newIsland.y);
         updateAccount({
             ...account,
+            cityCount: account.islands.reduce((total, island) => total + island.cities.length, 0) + 1,
             islands: [
                 ...account.islands.filter(({ x, y }) => x !== newIsland.x || y !== newIsland.y),
                 {

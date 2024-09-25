@@ -11,6 +11,16 @@ const App = () => {
     const [servers, setServers] = useState<Server[]>();
     const [accounts, setAccounts] = useState<Account[]>(JSON.parse(localStorage.getItem('accounts') ?? '[]') ?? []);
 
+    // TODO: remove
+    if (accounts.filter((account) => account.cityCount === undefined).length > 0) {
+        setAccounts((accounts) =>
+            accounts.map((account) => ({
+                ...account,
+                cityCount: account.islands.reduce((total, island) => total + island.cities.length, 0),
+            })),
+        );
+    }
+
     useEffect(() => {
         fetch('/api/servers.json')
             .then((res) => res.json())
@@ -24,7 +34,7 @@ const App = () => {
     const addAccount = (account: Pick<Account, 'server' | 'name'>) =>
         setAccounts((accounts) => [
             ...accounts,
-            { ...account, formOfGovernment: 'IKACRACY', shrineLevel: 0, islands: [] },
+            { ...account, formOfGovernment: 'IKACRACY', shrineLevel: 0, cityCount: 0, islands: [] },
         ]);
 
     return (

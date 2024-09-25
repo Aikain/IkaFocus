@@ -24,7 +24,9 @@ const generateStepText = ({ target, type }: NextStep): string =>
                 ? `Päivitä <b>Jumalien pyhäkkö</b> kaupungissa <b>${target.name}</b> tasosta ${target.shrineLevel ?? 0} tasoon ${(target.shrineLevel ?? 0) + 1}`
                 : type === 'UPGRADE_COVERNOR'
                   ? `Päivitä <b>Kuvernöörin asunto</b> kaupungissa <b>${target.name}</b> tasosta ${target.governorLevel ?? 0} tasoon ${(target.governorLevel ?? 0) + 1}`
-                  : '';
+                  : type === 'CREATE_NEW_CITY'
+                    ? `Luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b>`}`
+                    : '';
 
 const NextSteps = ({ account }: Props) => {
     const nextSteps = useMemo(() => calculateNextSteps(account), [account]);

@@ -29,6 +29,7 @@ export interface Account {
     formOfGovernment: FormOfGovernment;
     research?: Research;
     shrineLevel: number;
+    cityCount: number;
     islands: Island[];
 }
 
@@ -76,4 +77,9 @@ export interface UpgradeBuilding extends AbstractNextStep {
     target: City;
 }
 
-export type NextStep = UpgradeIslandProduction | UpgradeBuilding;
+export interface CreateNewCity extends AbstractNextStep {
+    type: 'CREATE_NEW_CITY';
+    target: Island;
+}
+
+export type NextStep = UpgradeIslandProduction | UpgradeBuilding | CreateNewCity;

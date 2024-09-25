@@ -358,10 +358,7 @@ export const calculateLuxuryProduction = (island: Island, city: Omit<City, 'name
 export const calculateCorruptionPercent = (city: Omit<City, 'name'>, account: Account): number =>
     Math.min(
         Math.max(
-            (1 -
-                ((city.governorLevel ?? 0) + 1) /
-                    account.islands.reduce((total, island) => total + island.cities.length, 0)) *
-                100 +
+            (1 - ((city.governorLevel ?? 0) + 1) / account.cityCount) * 100 +
                 (account.formOfGovernment === 'ARISTOCRACY' || account.formOfGovernment === 'OLIGARCHY'
                     ? 3
                     : account.formOfGovernment === 'NOMOCRACY'
@@ -399,7 +396,7 @@ const calculateBuildTotalCost = (
         crystal,
         sulphur,
     }: Partial<{ wood: number; wine: number; marble: number; crystal: number; sulphur: number }>,
-    city: City,
+    city: Omit<City, 'name'>,
     research?: Research,
 ): number =>
     calculateCost(wood, research, city.woodReduceLevel) +
@@ -416,6 +413,15 @@ const calculateCost = (cost?: number, research?: Research, reducerLevel?: number
                 (reducerLevel ?? 0)) /
                 100),
     );
+
+const EMPTY_ISLAND: Island = {
+    x: 0,
+    y: 0,
+    luxuryResource: 'MARBLE' as const,
+    woodLevel: 1,
+    luxuryLevel: 1,
+    cities: [],
+};
 
 export const calculateNextSteps = (account: Account): NextStep[] =>
     [
@@ -509,8 +515,7 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                           },
                       ]
                     : []),
-                ...((city.governorLevel ?? 0) <
-                account.islands.reduce((total, island) => total + island.cities.length, 0) - 1
+                ...((city.governorLevel ?? 0) < account.cityCount - 1
                     ? [
                           {
                               type: 'UPGRADE_COVERNOR' as const,
@@ -539,6 +544,8 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
             ]),
         ),
         ...findCityForShrine(account).map((city) => ({
+            type: 'UPGRADE_SHRINE' as const,
+            target: city,
             productionIncrease:
                 account.islands.reduce(
                     (total, island) =>
@@ -571,9 +578,57 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                     0,
                 ),
             cost: calculateBuildTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city, account.research),
-            type: 'UPGRADE_SHRINE' as const,
-            target: city,
         })),
+        ...(account.cityCount < 21
+            ? [
+                  ...account.islands.map((island) => ({
+                      type: 'CREATE_NEW_CITY' as const,
+                      target: island,
+                      productionIncrease:
+                          calculateWoodProduction(island, { governorLevel: account.cityCount }, account) +
+                          calculateLuxuryProduction(island, { governorLevel: account.cityCount }, account),
+                      cost:
+                          account.islands
+                              .flatMap(({ cities }) =>
+                                  cities.filter(({ governorLevel }) => (governorLevel ?? 0) < account.cityCount),
+                              )
+                              .flatMap((city) =>
+                                  Array.from(Array(account.cityCount - (city.governorLevel ?? 0))).map((_, i) =>
+                                      calculateBuildTotalCost(COVERNOR[account.cityCount - i], city, account.research),
+                                  ),
+                              )
+                              .reduce((total, cost) => total + cost, 0) +
+                          Array.from(Array(account.cityCount))
+                              .map((_, i) =>
+                                  calculateBuildTotalCost(COVERNOR[account.cityCount - i], {}, account.research),
+                              )
+                              .reduce((total, cost) => total + cost, 0),
+                  })),
+                  {
+                      type: 'CREATE_NEW_CITY' as const,
+                      target: EMPTY_ISLAND,
+                      productionIncrease:
+                          calculateWoodProduction(EMPTY_ISLAND, { governorLevel: account.cityCount }, account) +
+                          calculateLuxuryProduction(EMPTY_ISLAND, { governorLevel: account.cityCount }, account),
+                      cost:
+                          account.islands
+                              .flatMap(({ cities }) =>
+                                  cities.filter(({ governorLevel }) => (governorLevel ?? 0) < account.cityCount),
+                              )
+                              .flatMap((city) =>
+                                  Array.from(Array(account.cityCount - (city.governorLevel ?? 0))).map((_, i) =>
+                                      calculateBuildTotalCost(COVERNOR[account.cityCount - i], city, account.research),
+                                  ),
+                              )
+                              .reduce((total, cost) => total + cost, 0) +
+                          Array.from(Array(account.cityCount))
+                              .map((_, i) =>
+                                  calculateBuildTotalCost(COVERNOR[account.cityCount - i], {}, account.research),
+                              )
+                              .reduce((total, cost) => total + cost, 0),
+                  },
+              ]
+            : []),
     ]
         .filter(({ productionIncrease }) => productionIncrease !== 0)
         .map((nextStep) => ({ ...nextStep, paybackTime: nextStep.cost / nextStep.productionIncrease }))
