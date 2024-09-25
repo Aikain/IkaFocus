@@ -3,7 +3,11 @@ import { ChangeEvent, ReactNode } from 'react';
 import { Account, City, God, Island as IslandType, LuxuryResource } from '@/types';
 import { translateGod } from '@/utils';
 
-import { calculateLuxuryProduction, calculateWoodProduction } from '@/components/AccountList/utils.ts';
+import {
+    calculateCorruptionPercent,
+    calculateLuxuryProduction,
+    calculateWoodProduction,
+} from '@/components/AccountList/utils.ts';
 
 import styles from '@/styles/account.module.scss';
 
@@ -30,6 +34,7 @@ const LUXURY_RESOURCE: Record<LuxuryResource, ReactNode> = {
 type Building = keyof Omit<City, 'name' | 'helpingHands' | 'selectedGod'>;
 
 const BUILDINGS: { name: Building; min: number; max: number }[] = [
+    { name: 'governorLevel', min: 0, max: 20 },
     { name: 'woodBoosterLevel', min: 0, max: 61 },
     { name: 'luxuryBoosterLevel', min: 0, max: 61 },
     { name: 'shrineLevel', min: 0, max: 41 },
@@ -121,6 +126,12 @@ const Island = ({ account, island, updateIsland }: Props) => {
                         <th>Valittu jumala</th>
                         <th className={styles.building}>
                             <img
+                                src='https://gf1.geo.gfsrv.net/cdn9f/37ff14c8b4567f20e7df14f459410f.png'
+                                alt='Kuvernöörin asunto'
+                            />
+                        </th>
+                        <th className={styles.building}>
+                            <img
                                 src='https://gf1.geo.gfsrv.net/cdn86/102a0c388301526586234c78b9ae59.png'
                                 alt='Metsänhoitajan talo'
                             />
@@ -170,6 +181,7 @@ const Island = ({ account, island, updateIsland }: Props) => {
                             />
                         </th>
                         <th>{LUXURY_RESOURCE[island.luxuryResource]}</th>
+                        <th>Korruptio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -226,15 +238,24 @@ const Island = ({ account, island, updateIsland }: Props) => {
                             </td>
                             <td className={styles.production}>
                                 {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
-                                    calculateWoodProduction(island, rest, account),
+                                    Math.floor(calculateWoodProduction(island, rest, account)),
                                 )}
                                 /h
                             </td>
                             <td className={styles.production}>
                                 {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
-                                    calculateLuxuryProduction(island, rest, account),
+                                    Math.floor(calculateLuxuryProduction(island, rest, account)),
                                 )}
                                 /h
+                            </td>
+                            <td
+                                className={`${styles.corruption} ${calculateCorruptionPercent(rest, account) > 0 ? styles.red : ''}`}
+                            >
+                                {new Intl.NumberFormat(undefined, {
+                                    maximumFractionDigits: 0,
+                                    style: 'unit',
+                                    unit: 'percent',
+                                }).format(Math.floor(calculateCorruptionPercent(rest, account)))}
                             </td>
                         </tr>
                     ))}

@@ -47,6 +47,7 @@ export type God = 'PAN' | 'DIONYSUS' | 'TYCHE' | 'PLUTUS' | 'THEIA' | 'HEPHAESTU
 
 export interface City {
     name: string;
+    governorLevel?: number;
     woodBoosterLevel?: number;
     luxuryBoosterLevel?: number;
     woodReduceLevel?: number;
@@ -71,7 +72,7 @@ export interface UpgradeIslandProduction extends AbstractNextStep {
 }
 
 export interface UpgradeBuilding extends AbstractNextStep {
-    type: 'UPGRADE_WOOD_BOOSTER' | 'UPGRADE_LUXURY_BOOSTER' | 'UPGRADE_SHRINE';
+    type: 'UPGRADE_WOOD_BOOSTER' | 'UPGRADE_LUXURY_BOOSTER' | 'UPGRADE_SHRINE' | 'UPGRADE_COVERNOR';
     target: City;
 }
 

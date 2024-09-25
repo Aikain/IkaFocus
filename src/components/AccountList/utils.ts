@@ -298,29 +298,79 @@ const SHRINE: Record<number, { wood: number; wine: number; marble: number; cryst
     41: { wood: 7608367, wine: 634434, marble: 2405243, crystal: 998361, sulphur: 864959 },
 };
 
-// TODO: premium
-// TODO: Cinetheatre
-// TODO: Helios
-// TODO: corruption
-export const calculateWoodProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
-    WOOD[island.woodLevel].maxWorker *
-    (city.helpingHands ? (account.formOfGovernment === 'TECHNOCRACY' ? 1.15 : 1.125) : 1) *
-    (1 + (account.server.bonuses.wood ?? 0) / 100) *
-    (1 + 0.02 * (city.woodBoosterLevel ?? 0)) *
-    (account.shrineLevel !== 0 && city.selectedGod === 'PAN' ? 1.04 + 0.02 * account.shrineLevel : 1);
+const COVERNOR: Record<number, { wood: number; wine: number; marble: number; crystal: number; sulphur: number }> = {
+    1: { wood: 712, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
+    2: { wood: 5824, wine: 0, marble: 1434, crystal: 0, sulphur: 0 },
+    3: { wood: 16048, wine: 0, marble: 4546, crystal: 0, sulphur: 3089 },
+    4: { wood: 36496, wine: 10898, marble: 10770, crystal: 0, sulphur: 10301 },
+    5: { wood: 77392, wine: 22110, marble: 23218, crystal: 21188, sulphur: 24725 },
+    6: { wood: 159184, wine: 44534, marble: 48114, crystal: 42400, sulphur: 53573 },
+    7: { wood: 322768, wine: 89382, marble: 97906, crystal: 84824, sulphur: 111269 },
+    8: { wood: 649936, wine: 179078, marble: 197490, crystal: 169672, sulphur: 226661 },
+    9: { wood: 1304272, wine: 358470, marble: 396658, crystal: 339368, sulphur: 457445 },
+    10: { wood: 2612944, wine: 717254, marble: 794994, crystal: 678760, sulphur: 919013 },
+    11: { wood: 4743518, wine: 1434822, marble: 1591666, crystal: 1357544, sulphur: 1842149 },
+    12: { wood: 8611345, wine: 2870272, marble: 3186691, crystal: 2715136, sulphur: 3692562 },
+    13: { wood: 15632968, wine: 5741800, marble: 6380109, crystal: 5430368, sulphur: 7401691 },
+    14: { wood: 28379968, wine: 11486115, marble: 12773685, crystal: 10860928, sulphur: 14836588 },
+    15: { wood: 51520771, wine: 22977258, marble: 25574331, crystal: 21722240, sulphur: 29739739 },
+    16: { wood: 93530403, wine: 45964577, marble: 51202643, crystal: 43445248, sulphur: 59612900 },
+    17: { wood: 169794358, wine: 91949276, marble: 102513360, crystal: 86892032, sulphur: 119493244 },
+    18: { wood: 308243344, wine: 183938806, marble: 205243096, crystal: 173787137, sulphur: 239522576 },
+    19: { wood: 559582545, wine: 367958137, marble: 410919400, crystal: 347580419, sulphur: 480119730 },
+    20: { wood: 1015861754, wine: 736077360, marble: 822706132, crystal: 695173129, sulphur: 962393438 },
+};
 
 // TODO: premium
 // TODO: Cinetheatre
 // TODO: Helios
-// TODO: corruption
+export const calculateWoodProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
+    // Basic
+    WOOD[island.woodLevel].maxWorker *
+    (city.helpingHands ? (account.formOfGovernment === 'TECHNOCRACY' ? 1.15 : 1.125) : 1) *
+    // World
+    (1 + (account.server.bonuses.wood ?? 0) / 100) *
+    // Bonuses
+    (1 +
+        0.02 * (city.woodBoosterLevel ?? 0) +
+        (account.shrineLevel !== 0 && city.selectedGod === 'PAN' ? 0.03 + 0.02 * account.shrineLevel : 0)) *
+    // Corruption
+    (1 - calculateCorruptionPercent(city, account) / 100);
+
+// TODO: premium
+// TODO: Cinetheatre
+// TODO: Helios
 export const calculateLuxuryProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
+    // Basic
     LUXURY[island.luxuryLevel].maxWorker *
     (city.helpingHands ? 1.125 : 1) *
+    // World
     (1 + (getLuxuryBonus(account.server, island.luxuryResource) ?? 0) / 100) *
-    (1 + 0.02 * (city.luxuryBoosterLevel ?? 0)) *
-    (account.shrineLevel !== 0 && city.selectedGod && isGodActive(city.selectedGod, island.luxuryResource)
-        ? 1.04 + 0.02 * account.shrineLevel
-        : 1);
+    // Bonuses
+    (1 +
+        0.02 * (city.luxuryBoosterLevel ?? 0) +
+        (account.shrineLevel !== 0 && city.selectedGod && isGodActive(city.selectedGod, island.luxuryResource)
+            ? 0.03 + 0.02 * account.shrineLevel
+            : 0)) *
+    // Corruption
+    (1 - calculateCorruptionPercent(city, account) / 100);
+
+export const calculateCorruptionPercent = (city: Omit<City, 'name'>, account: Account): number =>
+    Math.min(
+        Math.max(
+            (1 -
+                ((city.governorLevel ?? 0) + 1) /
+                    account.islands.reduce((total, island) => total + island.cities.length, 0)) *
+                100 +
+                (account.formOfGovernment === 'ARISTOCRACY' || account.formOfGovernment === 'OLIGARCHY'
+                    ? 3
+                    : account.formOfGovernment === 'NOMOCRACY'
+                      ? -5
+                      : 0),
+            0,
+        ),
+        100,
+    );
 
 const getLuxuryBonus = (server: Server, luxury: LuxuryResource): number | undefined => {
     switch (luxury) {
@@ -453,6 +503,33 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                                   ) - calculateLuxuryProduction(island, city, account),
                               cost: calculateBuildTotalCost(
                                   LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1],
+                                  city,
+                                  account.research,
+                              ),
+                          },
+                      ]
+                    : []),
+                ...((city.governorLevel ?? 0) <
+                account.islands.reduce((total, island) => total + island.cities.length, 0) - 1
+                    ? [
+                          {
+                              type: 'UPGRADE_COVERNOR' as const,
+                              target: city,
+                              productionIncrease:
+                                  calculateWoodProduction(
+                                      island,
+                                      { ...city, governorLevel: (city.governorLevel ?? 0) + 1 },
+                                      account,
+                                  ) -
+                                  calculateWoodProduction(island, city, account) +
+                                  calculateLuxuryProduction(
+                                      island,
+                                      { ...city, governorLevel: (city.governorLevel ?? 0) + 1 },
+                                      account,
+                                  ) -
+                                  calculateLuxuryProduction(island, city, account),
+                              cost: calculateBuildTotalCost(
+                                  COVERNOR[(city.governorLevel ?? 0) + 1],
                                   city,
                                   account.research,
                               ),
