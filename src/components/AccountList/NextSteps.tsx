@@ -27,7 +27,7 @@ const generateStepText = ({ target, type }: NextStep): string =>
 const NextSteps = ({ account }: Props) => {
     const nextSteps = useMemo(() => calculateNextSteps(account), [account]);
 
-    return (
+    return nextSteps.length ? (
         <table className={styles.nextSteps}>
             <thead>
                 <tr>
@@ -48,7 +48,7 @@ const NextSteps = ({ account }: Props) => {
                 ))}
             </tbody>
         </table>
-    );
+    ) : null;
 };
 
 export default NextSteps;

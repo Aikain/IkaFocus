@@ -359,64 +359,88 @@ const calculateBuildTotalCost = (
 
 export const calculateNextSteps = (account: Account): NextStep[] =>
     [
-        // TODO: filter max
         ...account.islands.flatMap((island) => [
-            {
-                type: 'UPGRADE_WOOD' as const,
-                target: island,
-                productionIncrease:
-                    island.cities.reduce(
-                        (total, city) =>
-                            total +
-                            calculateWoodProduction({ ...island, woodLevel: island.woodLevel + 1 }, city, account),
-                        0,
-                    ) -
-                    island.cities.reduce((total, city) => total + calculateWoodProduction(island, city, account), 0),
-                cost: WOOD[island.woodLevel + 1].donation,
-            },
-            {
-                type: 'UPGRADE_LUXURY' as const,
-                target: island,
-                productionIncrease:
-                    island.cities.reduce(
-                        (total, city) =>
-                            total +
-                            calculateLuxuryProduction(
-                                { ...island, luxuryLevel: island.luxuryLevel + 1 },
-                                city,
-                                account,
-                            ),
-                        0,
-                    ) -
-                    island.cities.reduce((total, city) => total + calculateLuxuryProduction(island, city, account), 0),
-                cost: LUXURY[island.luxuryLevel + 1].donation,
-            },
+            ...(island.woodLevel < 60
+                ? [
+                      {
+                          type: 'UPGRADE_WOOD' as const,
+                          target: island,
+                          productionIncrease:
+                              island.cities.reduce(
+                                  (total, city) =>
+                                      total +
+                                      calculateWoodProduction(
+                                          { ...island, woodLevel: island.woodLevel + 1 },
+                                          city,
+                                          account,
+                                      ),
+                                  0,
+                              ) -
+                              island.cities.reduce(
+                                  (total, city) => total + calculateWoodProduction(island, city, account),
+                                  0,
+                              ),
+                          cost: WOOD[island.woodLevel + 1].donation,
+                      },
+                  ]
+                : []),
+            ...(island.luxuryLevel < 60
+                ? [
+                      {
+                          type: 'UPGRADE_LUXURY' as const,
+                          target: island,
+                          productionIncrease:
+                              island.cities.reduce(
+                                  (total, city) =>
+                                      total +
+                                      calculateLuxuryProduction(
+                                          { ...island, luxuryLevel: island.luxuryLevel + 1 },
+                                          city,
+                                          account,
+                                      ),
+                                  0,
+                              ) -
+                              island.cities.reduce(
+                                  (total, city) => total + calculateLuxuryProduction(island, city, account),
+                                  0,
+                              ),
+                          cost: LUXURY[island.luxuryLevel + 1].donation,
+                      },
+                  ]
+                : []),
         ]),
-        // TODO: filter max
         ...account.islands.flatMap((island) =>
             island.cities.flatMap((city) => [
-                {
-                    type: 'UPGRADE_WOOD_BOOSTER' as const,
-                    target: city,
-                    productionIncrease:
-                        calculateWoodProduction(
-                            island,
-                            { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
-                            account,
-                        ) - calculateWoodProduction(island, city, account),
-                    cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
-                },
-                {
-                    type: 'UPGRADE_LUXURY_BOOSTER' as const,
-                    target: city,
-                    productionIncrease:
-                        calculateLuxuryProduction(
-                            island,
-                            { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
-                            account,
-                        ) - calculateLuxuryProduction(island, city, account),
-                    cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
-                },
+                ...((city.woodBoosterLevel ?? 0) < 61
+                    ? [
+                          {
+                              type: 'UPGRADE_WOOD_BOOSTER' as const,
+                              target: city,
+                              productionIncrease:
+                                  calculateWoodProduction(
+                                      island,
+                                      { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
+                                      account,
+                                  ) - calculateWoodProduction(island, city, account),
+                              cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
+                          },
+                      ]
+                    : []),
+                ...((city.luxuryBoosterLevel ?? 0) < 61
+                    ? [
+                          {
+                              type: 'UPGRADE_LUXURY_BOOSTER' as const,
+                              target: city,
+                              productionIncrease:
+                                  calculateLuxuryProduction(
+                                      island,
+                                      { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
+                                      account,
+                                  ) - calculateLuxuryProduction(island, city, account),
+                              cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
+                          },
+                      ]
+                    : []),
             ]),
         ),
         ...findCityForShrine(account).map((city) => ({
