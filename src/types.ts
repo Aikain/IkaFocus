@@ -21,10 +21,13 @@ export type FormOfGovernment =
     | 'TECHNOCRACY'
     | 'THEOCRACY';
 
+export type Research = 'PULLEY' | 'GEOMETRY' | 'SPIRIT_LEVEL';
+
 export interface Account {
     server: Server;
     name: string;
     formOfGovernment: FormOfGovernment;
+    research?: Research;
     shrineLevel: number;
     islands: Island[];
 }

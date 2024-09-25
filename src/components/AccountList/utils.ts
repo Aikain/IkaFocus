@@ -1,4 +1,4 @@
-import { Account, City, God, Island, LuxuryResource, NextStep, Server } from '@/types';
+import { Account, City, God, Island, LuxuryResource, NextStep, Research, Server } from '@/types';
 
 const WOOD: Record<number, { donation: number; maxWorker: number }> = {
     1: { donation: 0, maxWorker: 30 },
@@ -350,12 +350,22 @@ const calculateBuildTotalCost = (
         sulphur,
     }: Partial<{ wood: number; wine: number; marble: number; crystal: number; sulphur: number }>,
     city: City,
+    research?: Research,
 ): number =>
-    (wood ?? 0) * ((100 - (city.woodReduceLevel ?? 0)) / 100) +
-    (wine ?? 0) * ((100 - (city.wineReduceLevel ?? 0)) / 100) +
-    (marble ?? 0) * ((100 - (city.marbleReduceLevel ?? 0)) / 100) +
-    (crystal ?? 0) * ((100 - (city.crystalReduceLevel ?? 0)) / 100) +
-    (sulphur ?? 0) * ((100 - (city.sulphurReduceLevel ?? 0)) / 100);
+    calculateCost(wood, research, city.woodReduceLevel) +
+    calculateCost(wine, research, city.wineReduceLevel) +
+    calculateCost(marble, research, city.marbleReduceLevel) +
+    calculateCost(crystal, research, city.crystalReduceLevel) +
+    calculateCost(sulphur, research, city.sulphurReduceLevel);
+
+const calculateCost = (cost?: number, research?: Research, reducerLevel?: number): number =>
+    Math.floor(
+        (cost ?? 0) *
+            ((100 -
+                (research === 'SPIRIT_LEVEL' ? 14 : research === 'GEOMETRY' ? 6 : research === 'PULLEY' ? 2 : 0) -
+                (reducerLevel ?? 0)) /
+                100),
+    );
 
 export const calculateNextSteps = (account: Account): NextStep[] =>
     [
@@ -422,7 +432,11 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                                       { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
                                       account,
                                   ) - calculateWoodProduction(island, city, account),
-                              cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
+                              cost: calculateBuildTotalCost(
+                                  WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1],
+                                  city,
+                                  account.research,
+                              ),
                           },
                       ]
                     : []),
@@ -437,7 +451,11 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                                       { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
                                       account,
                                   ) - calculateLuxuryProduction(island, city, account),
-                              cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
+                              cost: calculateBuildTotalCost(
+                                  LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1],
+                                  city,
+                                  account.research,
+                              ),
                           },
                       ]
                     : []),
@@ -475,7 +493,7 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
                         ),
                     0,
                 ),
-            cost: calculateBuildTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city),
+            cost: calculateBuildTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city, account.research),
             type: 'UPGRADE_SHRINE' as const,
             target: city,
         })),
