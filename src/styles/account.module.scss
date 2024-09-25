@@ -42,6 +42,18 @@
       flex-direction: row;
       gap: .5rem;
     }
+
+    .nextSteps {
+      width: fit-content;
+
+      td, th {
+        padding: 0 .3rem;
+
+        &:not(:first-child) {
+          text-align: center;
+        }
+      }
+    }
   }
 }
 

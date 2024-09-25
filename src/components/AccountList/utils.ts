@@ -1,4 +1,13 @@
-import { Account, City, Island, LuxuryResource, Server } from '@/types';
+import {
+    Account,
+    City,
+    Island,
+    LuxuryResource,
+    NextStep,
+    Server,
+    UpgradeBooster,
+    UpgradeIslandProduction,
+} from '@/types';
 
 const WOOD: Record<number, { donation: number; maxWorker: number }> = {
     1: { donation: 0, maxWorker: 30 },
@@ -126,6 +135,134 @@ const LUXURY: Record<number, { donation: number; maxWorker: number }> = {
     60: { donation: 8790687647, maxWorker: 2480 },
 };
 
+const WOOD_BOOSTER: Record<number, { wood: number; marble: number }> = {
+    1: { wood: 250, marble: 0 },
+    2: { wood: 430, marble: 104 },
+    3: { wood: 664, marble: 237 },
+    4: { wood: 968, marble: 410 },
+    5: { wood: 1364, marble: 635 },
+    6: { wood: 1878, marble: 928 },
+    7: { wood: 2546, marble: 1309 },
+    8: { wood: 3415, marble: 1803 },
+    9: { wood: 4544, marble: 2446 },
+    10: { wood: 6013, marble: 3282 },
+    11: { wood: 7922, marble: 4368 },
+    12: { wood: 10403, marble: 5781 },
+    13: { wood: 13629, marble: 7617 },
+    14: { wood: 17823, marble: 10004 },
+    15: { wood: 23274, marble: 13108 },
+    16: { wood: 30362, marble: 17142 },
+    17: { wood: 39575, marble: 22387 },
+    18: { wood: 51552, marble: 29204 },
+    19: { wood: 67123, marble: 38068 },
+    20: { wood: 87365, marble: 4959 },
+    21: { wood: 11368, marble: 64569 },
+    22: { wood: 147889, marble: 84042 },
+    23: { wood: 19236, marble: 109357 },
+    24: { wood: 250173, marble: 142266 },
+    25: { wood: 32533, marble: 185047 },
+    26: { wood: 423035, marble: 240664 },
+    27: { wood: 55005, marble: 312965 },
+    28: { wood: 71517, marble: 406956 },
+    29: { wood: 929826, marble: 529145 },
+    30: { wood: 1208879, marble: 68799 },
+    31: { wood: 1571647, marble: 894489 },
+    32: { wood: 2043247, marble: 1162938 },
+    33: { wood: 2656358, marble: 1511952 },
+    34: { wood: 3453445, marble: 1965711 },
+    35: { wood: 4489711, marble: 2555649 },
+    36: { wood: 5836927, marble: 3322636 },
+    37: { wood: 7588399, marble: 4319807 },
+    38: { wood: 9865430, marble: 5616243 },
+    39: { wood: 12825724, marble: 7301758 },
+    40: { wood: 16674305, marble: 9493121 },
+    41: { wood: 21677721, marble: 12342143 },
+    42: { wood: 28182498, marble: 16046197 },
+    43: { wood: 36639146, marble: 20861892 },
+    44: { wood: 47633359, marble: 27122845 },
+    45: { wood: 61926577, marble: 35262801 },
+    46: { wood: 80508723, marble: 45845674 },
+    47: { wood: 104666764, marble: 59604620 },
+    48: { wood: 136073846, marble: 77492822 },
+    49: { wood: 176905169, marble: 100749532 },
+    50: { wood: 229988640, marble: 130985914 },
+    51: { wood: 299000730, marble: 170296669 },
+    52: { wood: 388721096, marble: 221405146 },
+    53: { wood: 505363618, marble: 287852011 },
+    54: { wood: 657006755, marble: 374240536 },
+    55: { wood: 854153052, marble: 486555497 },
+    56: { wood: 1110456522, marble: 632577793 },
+    57: { wood: 1443668303, marble: 822423477 },
+    58: { wood: 1876866070, marble: 1069244578 },
+    59: { wood: 2440052358, marble: 1390140238 },
+    60: { wood: 3172232480, marble: 1807341295 },
+    61: { wood: 4124115974, marble: 2349750384 },
+};
+
+const LUXURY_BOOSTER: Record<number, { wood: number; marble: number }> = {
+    1: { wood: 274, marble: 0 },
+    2: { wood: 467, marble: 116 },
+    3: { wood: 718, marble: 255 },
+    4: { wood: 1045, marble: 436 },
+    5: { wood: 1469, marble: 671 },
+    6: { wood: 2021, marble: 977 },
+    7: { wood: 2738, marble: 1375 },
+    8: { wood: 3671, marble: 1892 },
+    9: { wood: 4883, marble: 2564 },
+    10: { wood: 6459, marble: 3437 },
+    11: { wood: 8508, marble: 4572 },
+    12: { wood: 11172, marble: 6049 },
+    13: { wood: 14634, marble: 7968 },
+    14: { wood: 19135, marble: 10462 },
+    15: { wood: 24987, marble: 13705 },
+    16: { wood: 32594, marble: 17921 },
+    17: { wood: 42483, marble: 23402 },
+    18: { wood: 55339, marble: 30527 },
+    19: { wood: 72051, marble: 3979 },
+    20: { wood: 93778, marble: 51831 },
+    21: { wood: 122022, marble: 67485 },
+    22: { wood: 15874, marble: 87835 },
+    23: { wood: 206472, marble: 11429 },
+    24: { wood: 268525, marble: 148681 },
+    25: { wood: 349194, marble: 19339 },
+    26: { wood: 454063, marble: 251512 },
+    27: { wood: 590393, marble: 327069 },
+    28: { wood: 767621, marble: 425295 },
+    29: { wood: 998019, marble: 552987 },
+    30: { wood: 1297536, marble: 718988 },
+    31: { wood: 1686907, marble: 934789 },
+    32: { wood: 2193090, marble: 1215330 },
+    33: { wood: 2851161, marble: 1580064 },
+    34: { wood: 3706696, marble: 2054260 },
+    35: { wood: 4818949, marble: 2670767 },
+    36: { wood: 6264951, marble: 3472295 },
+    37: { wood: 8144848, marble: 4514372 },
+    38: { wood: 10588838, marble: 5869187 },
+    39: { wood: 13766186, marble: 7630598 },
+    40: { wood: 17896947, marble: 9920629 },
+    41: { wood: 23267208, marble: 12897924 },
+    42: { wood: 30248900, marble: 16768741 },
+    43: { wood: 39325559, marble: 21801234 },
+    44: { wood: 51125812, marble: 28344037 },
+    45: { wood: 66466917, marble: 36850411 },
+    46: { wood: 86411362, marble: 47909647 },
+    47: { wood: 112340452, marble: 62287886 },
+    48: { wood: 146049973, marble: 80981202 },
+    49: { wood: 189874567, marble: 105284598 },
+    50: { wood: 246849419, marble: 136881725 },
+    51: { wood: 320920474, marble: 177961516 },
+    52: { wood: 417217714, marble: 231369827 },
+    53: { wood: 542410456, marble: 300806590 },
+    54: { wood: 705169252, marble: 391082130 },
+    55: { wood: 916766387, marble: 508450405 },
+    56: { wood: 1191856573, marble: 661042257 },
+    57: { wood: 1549491900, marble: 859428691 },
+    58: { wood: 2014441336, marble: 1117353190 },
+    59: { wood: 2618906170, marble: 1452683817 },
+    60: { wood: 3404750192, marble: 1888651047 },
+    61: { wood: 4426399083, marble: 2455457089 },
+};
+
 export const calculateWoodProduction = (island: Island, city: Omit<City, 'name'>, account: Account): number =>
     WOOD[island.woodLevel].maxWorker *
     (city.helpingHands ? (account.formOfGovernment === 'TECHNOCRACY' ? 1.15 : 1.125) : 1) *
@@ -150,3 +287,99 @@ const getLuxuryBonus = (server: Server, luxury: LuxuryResource): number | undefi
             return server.bonuses.sulphur;
     }
 };
+
+const calculateBuildTotalCost = (
+    {
+        wood,
+        wine,
+        marble,
+        crystal,
+        sulphur,
+    }: Partial<{ wood: number; wine: number; marble: number; crystal: number; sulphur: number }>,
+    city: City,
+): number =>
+    (wood ?? 0) * ((100 - (city.woodReduceLevel ?? 0)) / 100) +
+    (wine ?? 0) * ((100 - (city.wineReduceLevel ?? 0)) / 100) +
+    (marble ?? 0) * ((100 - (city.marbleReduceLevel ?? 0)) / 100) +
+    (crystal ?? 0) * ((100 - (city.crystalReduceLevel ?? 0)) / 100) +
+    (sulphur ?? 0) * ((100 - (city.sulphurReduceLevel ?? 0)) / 100);
+
+export const calculateNextSteps = (account: Account): NextStep[] =>
+    [
+        ...account.islands.flatMap(
+            (island) =>
+                [
+                    {
+                        productionIncrease:
+                            island.cities.reduce(
+                                (total, city) =>
+                                    total +
+                                    calculateWoodProduction(
+                                        { ...island, woodLevel: island.woodLevel + 1 },
+                                        city,
+                                        account,
+                                    ),
+                                0,
+                            ) -
+                            island.cities.reduce(
+                                (total, city) => total + calculateWoodProduction(island, city, account),
+                                0,
+                            ),
+                        cost: WOOD[island.woodLevel + 1].donation,
+                        type: 'UPGRADE_WOOD',
+                        target: island,
+                    },
+                    {
+                        productionIncrease:
+                            island.cities.reduce(
+                                (total, city) =>
+                                    total +
+                                    calculateLuxuryProduction(
+                                        { ...island, luxuryLevel: island.luxuryLevel + 1 },
+                                        city,
+                                        account,
+                                    ),
+                                0,
+                            ) -
+                            island.cities.reduce(
+                                (total, city) => total + calculateLuxuryProduction(island, city, account),
+                                0,
+                            ),
+                        cost: LUXURY[island.luxuryLevel + 1].donation,
+                        type: 'UPGRADE_LUXURY',
+                        target: island,
+                    },
+                ] as UpgradeIslandProduction[],
+        ),
+        ...account.islands.flatMap((island) =>
+            island.cities.flatMap(
+                (city) =>
+                    [
+                        {
+                            productionIncrease:
+                                calculateWoodProduction(
+                                    island,
+                                    { ...city, woodBoosterLevel: (city.woodBoosterLevel ?? 0) + 1 },
+                                    account,
+                                ) - calculateWoodProduction(island, city, account),
+                            cost: calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city),
+                            type: 'UPGRADE_WOOD_BOOSTER',
+                            target: city,
+                        },
+                        {
+                            productionIncrease:
+                                calculateLuxuryProduction(
+                                    island,
+                                    { ...city, luxuryBoosterLevel: (city.luxuryBoosterLevel ?? 0) + 1 },
+                                    account,
+                                ) - calculateLuxuryProduction(island, city, account),
+                            cost: calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city),
+                            type: 'UPGRADE_LUXURY_BOOSTER',
+                            target: city,
+                        },
+                    ] as UpgradeBooster[],
+            ),
+        ),
+    ]
+        .map((nextStep) => ({ ...nextStep, paybackTime: nextStep.cost / nextStep.productionIncrease }))
+        .sort((a, b) => a.paybackTime - b.paybackTime);

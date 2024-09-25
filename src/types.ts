@@ -50,3 +50,21 @@ export interface City {
     sulphurReduceLevel?: number;
     helpingHands?: boolean;
 }
+
+interface AbstractNextStep {
+    productionIncrease: number;
+    cost: number;
+    paybackTime: number;
+}
+
+export interface UpgradeIslandProduction extends AbstractNextStep {
+    type: 'UPGRADE_WOOD' | 'UPGRADE_LUXURY';
+    target: Island;
+}
+
+export interface UpgradeBooster extends AbstractNextStep {
+    type: 'UPGRADE_WOOD_BOOSTER' | 'UPGRADE_LUXURY_BOOSTER';
+    target: City;
+}
+
+export type NextStep = UpgradeIslandProduction | UpgradeBooster;

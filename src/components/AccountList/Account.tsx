@@ -3,6 +3,7 @@ import { generateServerName, translateFormOfGovernment } from '@/utils';
 
 import AddCity from '@/components/AccountList/AddCity.tsx';
 import IslandList from '@/components/AccountList/IslandList.tsx';
+import NextSteps from '@/components/AccountList/NextSteps.tsx';
 
 import styles from '@/styles/account.module.scss';
 
@@ -69,6 +70,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
             </div>
             <IslandList account={account} islands={account.islands} updateIslands={handleUpdateIslands} />
             <AddCity addCity={handleAddCity} />
+            <NextSteps account={account} />
         </div>
     );
 };
