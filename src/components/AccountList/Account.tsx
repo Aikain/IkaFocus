@@ -52,7 +52,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
             </div>
             <AccountDetails account={account} updateAccount={updateAccount} />
             <IslandList account={account} islands={account.islands} updateIslands={handleUpdateIslands} />
-            <AddCity addCity={handleAddCity} />
+            {account.cityCount < 21 ? <AddCity addCity={handleAddCity} /> : null}
             <NextSteps account={account} />
         </div>
     );
