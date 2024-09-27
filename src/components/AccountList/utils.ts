@@ -156,7 +156,7 @@ const WOOD_BOOSTER: Record<number, { wood: number; marble: number }> = {
     27: { wood: 550050, marble: 312965 },
     28: { wood: 715170, marble: 406956 },
     29: { wood: 929826, marble: 529145 },
-    30: { wood: 1208879, marble: 68799 },
+    30: { wood: 1208879, marble: 687990 },
     31: { wood: 1571647, marble: 894489 },
     32: { wood: 2043247, marble: 1162938 },
     33: { wood: 2656358, marble: 1511952 },
