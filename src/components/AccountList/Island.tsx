@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactNode } from 'react';
 
 import { Account, City, God, Island as IslandType, LuxuryResource } from '@/types';
-import { translateGod } from '@/utils';
+import { convertIslandToText, translateGod } from '@/utils';
 
 import {
     calculateCorruptionPercent,
@@ -97,8 +97,7 @@ const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
         <div className={styles.island}>
             <div className={styles.islandDetails}>
                 <span>
-                    [{(island.x < 10 ? '0' : '') + island.x}:{(island.y < 10 ? '0' : '') + island.y}]{' '}
-                    {LUXURY_RESOURCE[island.luxuryResource]}
+                    {LUXURY_RESOURCE[island.luxuryResource]} {convertIslandToText(island)}
                 </span>
                 <div>
                     <label htmlFor='woodLevel'>Sahan taso:</label>

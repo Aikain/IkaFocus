@@ -667,5 +667,8 @@ const calculateNewCityWithBooster = (
         (city.luxuryBoosterLevel
             ? calculateBuildTotalCost(city.luxuryBoosterLevel, LUXURY_BOOSTER, city, account.research)
             : 0),
-    buildings: city,
+    buildings: {
+        ...city,
+        governorLevel: account.cityCount,
+    },
 });

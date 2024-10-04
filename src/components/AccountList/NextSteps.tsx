@@ -14,26 +14,33 @@ interface Props {
 const generateStepText = ({ target, type, ...rest }: NextStep): string => {
     switch (type) {
         case 'UPGRADE_WOOD':
-            return `Nosta <b>saha</b> saarella <b>${convertIslandToText(target)}</b> tasosta ${target.woodLevel} tasolle ${target.woodLevel + 1}`;
+            return `<b>${convertIslandToText(target)}</b>: <b>saha</b> ${target.woodLevel} ⇛ ${target.woodLevel + 1}`;
         case 'UPGRADE_LUXURY':
-            return `Nosta <b>yleellisuusresurssi</b> saarella <b>${convertIslandToText(target)}</b> tasosta ${target.luxuryLevel} tasolle ${target.luxuryLevel + 1}`;
+            return `<b>${convertIslandToText(target)}</b>: <b>yleellisuusresurssi</b> ${target.luxuryLevel} ⇛ ${target.luxuryLevel + 1}`;
         case 'UPGRADE_WOOD_BOOSTER':
-            return `Päivitä <b>metsähoitajan talo</b> kaupungissa <b>${target.name}</b> tasosta ${target.woodBoosterLevel ?? 0} tasolle ${(target.woodBoosterLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>metsänhoitajan talo</b> ${target.woodBoosterLevel ?? 0} ⇛ ${(target.woodBoosterLevel ?? 0) + 1}`;
         case 'UPGRADE_LUXURY_BOOSTER':
-            return `Päivitä <b>yleellisyysresurssin</b> lisääjä kaupungissa <b>${target.name}</b> tasosta ${target.luxuryBoosterLevel ?? 0} tasolle ${(target.luxuryBoosterLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>yleellisyysresurssin lisääjä</b> ${target.luxuryBoosterLevel ?? 0} ⇛ ${(target.luxuryBoosterLevel ?? 0) + 1}`;
         case 'UPGRADE_SHRINE':
-            return `Päivitä <b>Jumalien pyhäkkö</b> kaupungissa <b>${target.name}</b> tasosta ${target.shrineLevel ?? 0} tasoon ${(target.shrineLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>Jumalien pyhäkkö</b> ${target.shrineLevel ?? 0} ⇛ ${(target.shrineLevel ?? 0) + 1}`;
         case 'UPGRADE_COVERNOR':
-            return `Päivitä <b>Kuvernöörin asunto</b> kaupungissa <b>${target.name}</b> tasosta ${target.governorLevel ?? 0} tasoon ${(target.governorLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>Kuvernöörin asunto</b> ${target.governorLevel ?? 0} ⇛ ${(target.governorLevel ?? 0) + 1}`;
         case 'CREATE_NEW_CITY':
-            const { luxuryBoosterLevel, woodBoosterLevel } = (rest as CreateNewCity).buildings;
+            const { governorLevel, luxuryBoosterLevel, woodBoosterLevel } = (rest as CreateNewCity).buildings;
             const tmp = [
-                ...((woodBoosterLevel ?? 0) > 0 ? [`nosta puunlisääjä tasolle ${woodBoosterLevel}`] : []),
+                ...((governorLevel ?? 0) > 0 ? [`<b>kuvernöörin asunto</b> 0 ⇛ ${governorLevel}`] : []),
+                ...((woodBoosterLevel ?? 0) > 0 ? [`<b>metsänhoitajan talo</b> 0 ⇛ ${woodBoosterLevel}`] : []),
                 ...((luxuryBoosterLevel ?? 0) > 0
-                    ? [`nosta yleellisuusresurssin lisääjä tasolle ${luxuryBoosterLevel}`]
+                    ? [`<b>yleellisuusresurssin lisääjä</b> 0 ⇛ ${luxuryBoosterLevel}`]
                     : []),
             ];
-            return `Päivitä tarvittavat kuvernöörien asunnot, luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b>`} ja päivitä sen kuvernöörin asunto ${tmp.length > 0 ? `sekä ${tmp.join(' ja ')}` : ''}`;
+            return `<div>
+                        <b>${convertIslandToText(target)}</b>: <b>Uusi kaupunki</b>
+                        <ul>
+                            ${tmp.map((text) => `<li>${text}</li>`).join('')}
+                            <li>muut tarvittavat kuvet</li>
+                        </ul>
+                    </div>`;
     }
 };
 
