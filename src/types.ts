@@ -80,6 +80,7 @@ export interface UpgradeBuilding extends AbstractNextStep {
 export interface CreateNewCity extends AbstractNextStep {
     type: 'CREATE_NEW_CITY';
     target: Island;
+    buildings: Omit<City, 'name'>;
 }
 
 export type NextStep = UpgradeIslandProduction | UpgradeBuilding | CreateNewCity;

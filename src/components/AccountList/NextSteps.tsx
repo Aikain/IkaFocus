@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Account, NextStep } from '@/types';
+import { Account, CreateNewCity, NextStep } from '@/types';
 import { convertIslandToText, getRelativeTimeString } from '@/utils';
 
 import { calculateNextSteps } from '@/components/AccountList/utils.ts';
@@ -11,7 +11,7 @@ interface Props {
     account: Account;
 }
 
-const generateStepText = ({ target, type }: NextStep): string => {
+const generateStepText = ({ target, type, ...rest }: NextStep): string => {
     switch (type) {
         case 'UPGRADE_WOOD':
             return `Nosta <b>saha</b> saarella <b>${convertIslandToText(target)}</b> tasosta ${target.woodLevel} tasolle ${target.woodLevel + 1}`;
@@ -26,7 +26,14 @@ const generateStepText = ({ target, type }: NextStep): string => {
         case 'UPGRADE_COVERNOR':
             return `Päivitä <b>Kuvernöörin asunto</b> kaupungissa <b>${target.name}</b> tasosta ${target.governorLevel ?? 0} tasoon ${(target.governorLevel ?? 0) + 1}`;
         case 'CREATE_NEW_CITY':
-            return `Päivitä tarvittavat kuvernöörien asunnot, luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b>`} ja päivitä sen kuvernöörin asunto`;
+            const { luxuryBoosterLevel, woodBoosterLevel } = (rest as CreateNewCity).buildings;
+            const tmp = [
+                ...((woodBoosterLevel ?? 0) > 0 ? [`nosta puunlisääjä tasolle ${woodBoosterLevel}`] : []),
+                ...((luxuryBoosterLevel ?? 0) > 0
+                    ? [`nosta yleellisuusresurssin lisääjä tasolle ${luxuryBoosterLevel}`]
+                    : []),
+            ];
+            return `Päivitä tarvittavat kuvernöörien asunnot, luo uusi kaupunki ${target.x === 0 ? 'tyhjälle saarelle' : `saarelle <b>${convertIslandToText(target)}</b>`} ja päivitä sen kuvernöörin asunto ${tmp.length > 0 ? `sekä ${tmp.join(' ja ')}` : ''}`;
     }
 };
 
