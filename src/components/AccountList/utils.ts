@@ -138,7 +138,9 @@ const LUXURY: Record<number, { donation: number; maxWorker: number }> = {
     60: { donation: 8790687647, maxWorker: 2480 },
 };
 
-const WOOD_BOOSTER: Record<number, { wood: number; marble: number }> = {
+type BuildingCost = { wood?: number; wine?: number; marble?: number; crystal?: number; sulphur?: number };
+
+const WOOD_BOOSTER: Record<number, BuildingCost> = {
     1: { wood: 250, marble: 0 },
     2: { wood: 430, marble: 104 },
     3: { wood: 664, marble: 237 },
@@ -202,7 +204,7 @@ const WOOD_BOOSTER: Record<number, { wood: number; marble: number }> = {
     61: { wood: 4124115974, marble: 2349750384 },
 };
 
-const LUXURY_BOOSTER: Record<number, { wood: number; marble: number }> = {
+const LUXURY_BOOSTER: Record<number, BuildingCost> = {
     1: { wood: 274, marble: 0 },
     2: { wood: 467, marble: 116 },
     3: { wood: 718, marble: 255 },
@@ -266,7 +268,7 @@ const LUXURY_BOOSTER: Record<number, { wood: number; marble: number }> = {
     61: { wood: 4426399083, marble: 2455457089 },
 };
 
-const SHRINE: Record<number, { wood: number; wine: number; marble: number; crystal: number; sulphur: number }> = {
+const SHRINE: Record<number, BuildingCost> = {
     1: { wood: 890, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
     2: { wood: 1116, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
     3: { wood: 1400, wine: 124, marble: 0, crystal: 0, sulphur: 0 },
@@ -310,7 +312,7 @@ const SHRINE: Record<number, { wood: number; wine: number; marble: number; cryst
     41: { wood: 7608367, wine: 634434, marble: 2405243, crystal: 998361, sulphur: 864959 },
 };
 
-const COVERNOR: Record<number, { wood: number; wine: number; marble: number; crystal: number; sulphur: number }> = {
+const COVERNOR: Record<number, BuildingCost> = {
     1: { wood: 712, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
     2: { wood: 5824, wine: 0, marble: 1434, crystal: 0, sulphur: 0 },
     3: { wood: 16048, wine: 0, marble: 4546, crystal: 0, sulphur: 3089 },
@@ -401,6 +403,16 @@ const isGodActive = (god: God, luxury: LuxuryResource): boolean =>
     (god === 'HEPHAESTUS' && luxury === 'SULPHUR');
 
 const calculateBuildTotalCost = (
+    level: number,
+    levelCosts: Record<number, BuildingCost>,
+    city: Omit<City, 'name'>,
+    research?: Research,
+): number =>
+    Array.from(Array(level))
+        .map((_, i) => calculateBuildLevelTotalCost(levelCosts[level - i], city, research))
+        .reduce((total, cost) => total + cost, 0);
+
+const calculateBuildLevelTotalCost = (
     {
         wood,
         wine,
@@ -494,7 +506,11 @@ const calculateCityUpgrades = (account: Account): Omit<UpgradeBuilding, 'payback
                         account,
                     ),
                 (city: City) =>
-                    calculateBuildTotalCost(WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1], city, account.research),
+                    calculateBuildLevelTotalCost(
+                        WOOD_BOOSTER[(city.woodBoosterLevel ?? 0) + 1],
+                        city,
+                        account.research,
+                    ),
             ),
             ...calculateCityUpgrade(
                 city,
@@ -507,7 +523,11 @@ const calculateCityUpgrades = (account: Account): Omit<UpgradeBuilding, 'payback
                         account,
                     ),
                 (city: City) =>
-                    calculateBuildTotalCost(LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1], city, account.research),
+                    calculateBuildLevelTotalCost(
+                        LUXURY_BOOSTER[(city.luxuryBoosterLevel ?? 0) + 1],
+                        city,
+                        account.research,
+                    ),
             ),
             ...calculateCityUpgrade(
                 city,
@@ -525,7 +545,7 @@ const calculateCityUpgrades = (account: Account): Omit<UpgradeBuilding, 'payback
                         account,
                     ),
                 (city: City) =>
-                    calculateBuildTotalCost(COVERNOR[(city.governorLevel ?? 0) + 1], city, account.research),
+                    calculateBuildLevelTotalCost(COVERNOR[(city.governorLevel ?? 0) + 1], city, account.research),
             ),
         ]),
     );
@@ -583,7 +603,7 @@ const calculateShrineUpgrade = (account: Account): Omit<UpgradeBuilding, 'paybac
                     ),
                 0,
             ),
-        cost: calculateBuildTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city, account.research),
+        cost: calculateBuildLevelTotalCost(SHRINE[(city.shrineLevel ?? 0) + 1], city, account.research),
     }));
 
 const findCityForShrine = ({ islands, shrineLevel }: Account): City[] =>
@@ -610,6 +630,7 @@ const findBestBoosterLevel = (
     island: Island,
     getBoosterLevel: (level: number) => Omit<City, 'name'>,
 ): number => {
+    if (account.cityCount === 0) return 0;
     const { cost, productionIncrease } = calculateNewCityWithBooster(account, island);
     let paybackTime = cost / productionIncrease;
     for (let i = 1; i <= 61; i++) {
@@ -635,21 +656,16 @@ const calculateNewCityWithBooster = (
             .flatMap(({ cities }) => cities.filter(({ governorLevel }) => (governorLevel ?? 0) < account.cityCount))
             .flatMap((city) =>
                 Array.from(Array(account.cityCount - (city.governorLevel ?? 0))).map((_, i) =>
-                    calculateBuildTotalCost(COVERNOR[account.cityCount - i], city, account.research),
+                    calculateBuildLevelTotalCost(COVERNOR[account.cityCount - i], city, account.research),
                 ),
             )
             .reduce((total, cost) => total + cost, 0) +
-        Array.from(Array(account.cityCount))
-            .map(
-                (_, i) =>
-                    calculateBuildTotalCost(COVERNOR[account.cityCount - i], {}, account.research) +
-                    (city.woodBoosterLevel
-                        ? calculateBuildTotalCost(WOOD_BOOSTER[city.woodBoosterLevel], {}, account.research)
-                        : 0) +
-                    (city.luxuryBoosterLevel
-                        ? calculateBuildTotalCost(LUXURY_BOOSTER[city.luxuryBoosterLevel], {}, account.research)
-                        : 0),
-            )
-            .reduce((total, cost) => total + cost, 0),
+        calculateBuildTotalCost(account.cityCount, COVERNOR, city, account.research) +
+        (city.woodBoosterLevel
+            ? calculateBuildTotalCost(city.woodBoosterLevel, WOOD_BOOSTER, city, account.research)
+            : 0) +
+        (city.luxuryBoosterLevel
+            ? calculateBuildTotalCost(city.luxuryBoosterLevel, LUXURY_BOOSTER, city, account.research)
+            : 0),
     buildings: city,
 });
