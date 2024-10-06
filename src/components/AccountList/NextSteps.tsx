@@ -42,17 +42,17 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
                 ...((wineReduceLevel ?? 0) > 0 ? [`<b>Viinipaino</b> 0 ⇛ ${wineReduceLevel}`] : []),
                 ...((crystalReduceLevel ?? 0) > 0 ? [`<b>Optikko</b> 0 ⇛ ${crystalReduceLevel}`] : []),
                 ...((sulphurReduceLevel ?? 0) > 0 ? [`<b>Ilotulite Testialue</b> 0 ⇛ ${sulphurReduceLevel}`] : []),
-                ...((governorLevel ?? 0) > 0 ? [`<b>kuvernöörin asunto</b> 0 ⇛ ${governorLevel}`] : []),
-                ...((woodBoosterLevel ?? 0) > 0 ? [`<b>metsänhoitajan talo</b> 0 ⇛ ${woodBoosterLevel}`] : []),
+                ...((governorLevel ?? 0) > 0 ? [`<b>Kuvernöörin asunto</b> 0 ⇛ ${governorLevel}`] : []),
+                ...((woodBoosterLevel ?? 0) > 0 ? [`<b>Metsänhoitajan Talo</b> 0 ⇛ ${woodBoosterLevel}`] : []),
                 ...((luxuryBoosterLevel ?? 0) > 0
-                    ? [`<b>yleellisuusresurssin lisääjä</b> 0 ⇛ ${luxuryBoosterLevel}`]
+                    ? [`<b>Yleellisuusresurssin lisääjä</b> 0 ⇛ ${luxuryBoosterLevel}`]
                     : []),
             ];
             return `<div>
                         <b>${convertIslandToText(target)}</b>: <b>Uusi kaupunki</b>
                         <ul>
                             ${tmp.map((text) => `<li>${text}</li>`).join('')}
-                            <li>muut tarvittavat kuvet</li>
+                            <li>Muut tarvittavat kuvet</li>
                         </ul>
                     </div>`;
     }
