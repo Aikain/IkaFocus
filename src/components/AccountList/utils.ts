@@ -102,10 +102,10 @@ export const calculateNextSteps = (account: Account): NextStep[] =>
 
 const calculateIslandUpgrades = (account: Account): Omit<UpgradeIslandProduction, 'paybackTime'>[] =>
     account.islands.flatMap((island) => [
-        ...calculateIslandUpgrade(island, 'UPGRADE_WOOD', island.woodLevel, (city: City, upgrade: boolean) =>
+        ...calculateIslandUpgrade(island, 'UPGRADE_WOOD', island.woodLevel + 1, (city: City, upgrade: boolean) =>
             calculateWoodProduction({ ...island, woodLevel: island.woodLevel + (upgrade ? 1 : 0) }, city, account),
         ),
-        ...calculateIslandUpgrade(island, 'UPGRADE_LUXURY', island.luxuryLevel, (city: City, upgrade: boolean) =>
+        ...calculateIslandUpgrade(island, 'UPGRADE_LUXURY', island.luxuryLevel + 1, (city: City, upgrade: boolean) =>
             calculateLuxuryProduction(
                 { ...island, luxuryLevel: island.luxuryLevel + (upgrade ? 1 : 0) },
                 city,

@@ -41,6 +41,10 @@ describe.concurrent('basic production', () => {
 });
 
 describe.concurrent('cost', () => {
+    test('wood: lvl 2', () => {
+        expect(getCost('UPGRADE_WOOD', 2)).toBe(394);
+    });
+
     test('wood: lvl 31', () => {
         expect(getCost('UPGRADE_WOOD', 31)).toBe(1995717);
     });
@@ -51,6 +55,10 @@ describe.concurrent('cost', () => {
 
     test('wood: lvl 47', () => {
         expect(getCost('UPGRADE_WOOD', 47)).toBe(61315353);
+    });
+
+    test('luxury: lvl 2', () => {
+        expect(getCost('UPGRADE_LUXURY', 2)).toBe(1303);
     });
 
     test('luxury: lvl 25', () => {
