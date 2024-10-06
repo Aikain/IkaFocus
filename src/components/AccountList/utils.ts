@@ -258,22 +258,77 @@ const calculateNewCities = (account: Account): Omit<CreateNewCity, 'paybackTime'
           ]
         : [];
 
-const calculateNewCity = (account: Account, island: Island): Omit<CreateNewCity, 'paybackTime'> =>
-    calculateNewCityWithBooster(account, island, {
-        woodBoosterLevel: findBestBoosterLevel(account, island, (level: number) => ({ woodBoosterLevel: level })),
-        luxuryBoosterLevel: findBestBoosterLevel(account, island, (level: number) => ({ luxuryBoosterLevel: level })),
+const calculateNewCity = (account: Account, island: Island): Omit<CreateNewCity, 'paybackTime'> => {
+    const city: Omit<City, 'name'> = {};
+    (['wood', 'marble', 'wine', 'crystal', 'sulphur'] as const).forEach((r) => {
+        const {
+            cost,
+            buildings: { woodBoosterLevel, luxuryBoosterLevel },
+        } = calculateNewCityWithBooster(account, island, {
+            ...city,
+            woodBoosterLevel: findBestBuildLevel('woodBoosterLevel', account, island, city),
+            luxuryBoosterLevel: findBestBuildLevel('luxuryBoosterLevel', account, island, city),
+        });
+        city.woodBoosterLevel = woodBoosterLevel;
+        city.luxuryBoosterLevel = luxuryBoosterLevel;
+        let minCost = cost;
+        let i = 1;
+        for (; i < 50; i++) {
+            const {
+                cost,
+                buildings: { woodBoosterLevel, luxuryBoosterLevel },
+            } = calculateNewCityWithBooster(account, island, {
+                ...city,
+                [`${r}ReduceLevel`]: i,
+            });
+            if (cost >= minCost) break;
+            city.woodBoosterLevel = woodBoosterLevel;
+            city.luxuryBoosterLevel = luxuryBoosterLevel;
+            minCost = cost;
+        }
+        city[`${r}ReduceLevel`] = i;
     });
+    return calculateNewCityWithBooster(
+        account,
+        island,
+        {
+            ...city,
+            woodBoosterLevel: findBestBuildLevel('woodBoosterLevel', account, island, city),
+            luxuryBoosterLevel: findBestBuildLevel('luxuryBoosterLevel', account, island, city),
+        },
+        true,
+    );
+};
 
-const findBestBoosterLevel = (
+const getMaxLevel = (type: keyof Omit<City, 'name' | 'helpingHands' | 'selectedGod'>): number => {
+    switch (type) {
+        case 'governorLevel':
+            return 20;
+        case 'woodBoosterLevel':
+        case 'luxuryBoosterLevel':
+            return 61;
+        case 'woodReduceLevel':
+        case 'wineReduceLevel':
+        case 'marbleReduceLevel':
+        case 'crystalReduceLevel':
+        case 'sulphurReduceLevel':
+            return 50;
+        case 'shrineLevel':
+            return 41;
+    }
+};
+
+const findBestBuildLevel = (
+    type: keyof Omit<City, 'name' | 'helpingHands' | 'selectedGod'>,
     account: Account,
     island: Island,
-    getBoosterLevel: (level: number) => Omit<City, 'name'>,
+    city: Omit<City, 'name'>,
 ): number => {
     if (account.cityCount === 0) return 0;
-    const { cost, productionIncrease } = calculateNewCityWithBooster(account, island);
+    const { cost, productionIncrease } = calculateNewCityWithBooster(account, island, city);
     let paybackTime = cost / productionIncrease;
-    for (let i = 1; i <= 61; i++) {
-        const { cost, productionIncrease } = calculateNewCityWithBooster(account, island, getBoosterLevel(i));
+    for (let i = (city[type] ?? 0) + 1; i <= getMaxLevel(type); i++) {
+        const { cost, productionIncrease } = calculateNewCityWithBooster(account, island, { ...city, [type]: i });
         if (cost / productionIncrease > paybackTime) return i - 1;
         paybackTime = cost / productionIncrease;
     }
@@ -284,28 +339,56 @@ const calculateNewCityWithBooster = (
     account: Account,
     island: Island,
     city: Omit<City, 'name'> = {},
-): Omit<CreateNewCity, 'paybackTime'> => ({
-    type: 'CREATE_NEW_CITY' as const,
-    target: island,
-    productionIncrease:
-        calculateWoodProduction(island, { ...city, governorLevel: account.cityCount }, account) +
-        calculateLuxuryProduction(island, { ...city, governorLevel: account.cityCount }, account),
-    cost:
-        account.islands
-            .flatMap(({ cities }) => cities.filter(({ governorLevel }) => (governorLevel ?? 0) < account.cityCount))
-            .flatMap((city) =>
-                calculateBuildTotalCost('COVERNOR', city.governorLevel ?? 0, account.cityCount, city, account.research),
-            )
-            .reduce((total, cost) => total + cost, 0) +
-        calculateBuildTotalCost('COVERNOR', 1, account.cityCount, city, account.research) +
-        (city.woodBoosterLevel
-            ? calculateBuildTotalCost('WOOD_BOOSTER', 1, city.woodBoosterLevel, city, account.research)
-            : 0) +
-        (city.luxuryBoosterLevel
-            ? calculateBuildTotalCost('LUXURY_BOOSTER', 1, city.luxuryBoosterLevel, city, account.research)
-            : 0),
-    buildings: {
-        ...city,
-        governorLevel: account.cityCount,
-    },
-});
+    includeOtherCities: boolean = false,
+): Omit<CreateNewCity, 'paybackTime'> => {
+    return {
+        type: 'CREATE_NEW_CITY' as const,
+        target: island,
+        productionIncrease:
+            calculateWoodProduction(island, { ...city, governorLevel: account.cityCount }, account) +
+            calculateLuxuryProduction(island, { ...city, governorLevel: account.cityCount }, account),
+        cost:
+            (includeOtherCities
+                ? account.islands
+                      .flatMap(({ cities }) =>
+                          cities.filter(({ governorLevel }) => (governorLevel ?? 0) < account.cityCount),
+                      )
+                      .flatMap((city) =>
+                          calculateBuildTotalCost(
+                              'COVERNOR',
+                              city.governorLevel ?? 0,
+                              account.cityCount,
+                              city,
+                              account.research,
+                          ),
+                      )
+                      .reduce((total, cost) => total + cost, 0)
+                : 0) +
+            calculateBuildTotalCost('COVERNOR', 0, account.cityCount, city, account.research) +
+            (city.woodBoosterLevel
+                ? calculateBuildTotalCost('WOOD_BOOSTER', 0, city.woodBoosterLevel, city, account.research)
+                : 0) +
+            (city.luxuryBoosterLevel
+                ? calculateBuildTotalCost('LUXURY_BOOSTER', 0, city.luxuryBoosterLevel, city, account.research)
+                : 0) +
+            (city.woodReduceLevel
+                ? calculateBuildTotalCost('WOOD_REDUCER', 0, city.woodReduceLevel, city, account.research)
+                : 0) +
+            (city.wineReduceLevel
+                ? calculateBuildTotalCost('WINE_REDUCER', 0, city.wineReduceLevel, city, account.research)
+                : 0) +
+            (city.marbleReduceLevel
+                ? calculateBuildTotalCost('MARBLE_REDUCER', 0, city.marbleReduceLevel, city, account.research)
+                : 0) +
+            (city.crystalReduceLevel
+                ? calculateBuildTotalCost('CRYSTAL_REDUCER', 0, city.crystalReduceLevel, city, account.research)
+                : 0) +
+            (city.sulphurReduceLevel
+                ? calculateBuildTotalCost('SULPHUR_REDUCER', 0, city.sulphurReduceLevel, city, account.research)
+                : 0),
+        buildings: {
+            ...city,
+            governorLevel: account.cityCount,
+        },
+    };
+};

@@ -116,6 +116,56 @@ describe.concurrent('total cost', () => {
         );
     });
 
+    test('Carpenter`s Workshop: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('WOOD_REDUCER', 0, 50)).toBe(5468029 + 5425650);
+    });
+
+    test('Carpenter`s Workshop: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(calculateBuildTotalCost('WOOD_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
+            1968466 + 1953216, // calculated with excel
+        );
+    });
+
+    test('Wine Press: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('WINE_REDUCER', 0, 50)).toBe(4052131 + 4931529);
+    });
+
+    test('Wine Press: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(calculateBuildTotalCost('WINE_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
+            1458744 + 1775328, // calculated with excel
+        );
+    });
+
+    test('Architect`s Office: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('MARBLE_REDUCER', 0, 50)).toBe(6924265 + 2681355);
+    });
+
+    test('Architect`s Office: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(calculateBuildTotalCost('MARBLE_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
+            2492710 + 965261, // calculated with excel
+        );
+    });
+
+    test('Optician: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('CRYSTAL_REDUCER', 0, 50)).toBe(4552609 + 3464349);
+    });
+
+    test('Optician: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(calculateBuildTotalCost('CRYSTAL_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
+            1638914 + 1247143, // calculated with excel
+        );
+    });
+
+    test('Firework Test Area: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('SULPHUR_REDUCER', 0, 50)).toBe(3868114 + 5055489);
+    });
+
+    test('Firework Test Area: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(calculateBuildTotalCost('SULPHUR_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
+            1392496 + 1819950, // calculated with excel
+        );
+    });
+
     test('Shrine: lvl 0 -> 41', () => {
         expect(calculateBuildTotalCost('SHRINE', 0, 41)).toBe(37559062 + 3151535 + 10613472 + 4404823 + 3408566);
     });
@@ -124,6 +174,12 @@ describe.concurrent('total cost', () => {
         expect(calculateBuildTotalCost('SHRINE', 0, 41, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
             13521243 + 1134532 + 3820830 + 1585718 + 1227071, // calculated with excel
         );
+    });
+
+    test('Covernor: lvl 0 -> 16, wood -50%, marble -20%, Spirit Level', () => {
+        expect(
+            calculateBuildTotalCost('COVERNOR', 0, 16, { woodReduceLevel: 50, marbleReduceLevel: 20 }, 'SPIRIT_LEVEL'),
+        ).toBe(398263731);
     });
 
     test('Covernor: lvl 0 -> 20', () => {

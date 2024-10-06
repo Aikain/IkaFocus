@@ -26,8 +26,22 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
         case 'UPGRADE_COVERNOR':
             return `<b>${target.name}</b>: <b>Kuvernöörin asunto</b> ${target.governorLevel ?? 0} ⇛ ${(target.governorLevel ?? 0) + 1}`;
         case 'CREATE_NEW_CITY':
-            const { governorLevel, luxuryBoosterLevel, woodBoosterLevel } = (rest as CreateNewCity).buildings;
+            const {
+                woodReduceLevel,
+                marbleReduceLevel,
+                wineReduceLevel,
+                crystalReduceLevel,
+                sulphurReduceLevel,
+                governorLevel,
+                luxuryBoosterLevel,
+                woodBoosterLevel,
+            } = (rest as CreateNewCity).buildings;
             const tmp = [
+                ...((woodReduceLevel ?? 0) > 0 ? [`<b>Puusepän Paja</b> 0 ⇛ ${woodReduceLevel}`] : []),
+                ...((marbleReduceLevel ?? 0) > 0 ? [`<b>Arkkitehdin Toimisto</b> 0 ⇛ ${marbleReduceLevel}`] : []),
+                ...((wineReduceLevel ?? 0) > 0 ? [`<b>Viinipaino</b> 0 ⇛ ${wineReduceLevel}`] : []),
+                ...((crystalReduceLevel ?? 0) > 0 ? [`<b>Optikko</b> 0 ⇛ ${crystalReduceLevel}`] : []),
+                ...((sulphurReduceLevel ?? 0) > 0 ? [`<b>Ilotulite Testialue</b> 0 ⇛ ${sulphurReduceLevel}`] : []),
                 ...((governorLevel ?? 0) > 0 ? [`<b>kuvernöörin asunto</b> 0 ⇛ ${governorLevel}`] : []),
                 ...((woodBoosterLevel ?? 0) > 0 ? [`<b>metsänhoitajan talo</b> 0 ⇛ ${woodBoosterLevel}`] : []),
                 ...((luxuryBoosterLevel ?? 0) > 0

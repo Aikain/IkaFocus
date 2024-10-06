@@ -1,6 +1,16 @@
 import { City, Research } from '@/types';
 
 type BuildingCost = { wood?: number; wine?: number; marble?: number; crystal?: number; sulphur?: number };
+type Building =
+    | 'WOOD_BOOSTER'
+    | 'LUXURY_BOOSTER'
+    | 'WOOD_REDUCER'
+    | 'WINE_REDUCER'
+    | 'MARBLE_REDUCER'
+    | 'CRYSTAL_REDUCER'
+    | 'SULPHUR_REDUCER'
+    | 'SHRINE'
+    | 'COVERNOR';
 
 const WOOD_BOOSTER: Record<number, BuildingCost> = {
     1: { wood: 250, marble: 0 },
@@ -130,6 +140,271 @@ const LUXURY_BOOSTER: Record<number, BuildingCost> = {
     61: { wood: 4426399083, marble: 2455457089 },
 };
 
+const WOOD_REDUCER: Record<number, BuildingCost> = {
+    1: { wood: 63, marble: 0 },
+    2: { wood: 122, marble: 0 },
+    3: { wood: 192, marble: 0 },
+    4: { wood: 274, marble: 0 },
+    5: { wood: 372, marble: 0 },
+    6: { wood: 486, marble: 0 },
+    7: { wood: 620, marble: 0 },
+    8: { wood: 777, marble: 359 },
+    9: { wood: 962, marble: 444 },
+    10: { wood: 1178, marble: 546 },
+    11: { wood: 1432, marble: 669 },
+    12: { wood: 1730, marble: 816 },
+    13: { wood: 2078, marble: 993 },
+    14: { wood: 2486, marble: 1205 },
+    15: { wood: 2964, marble: 1459 },
+    16: { wood: 3524, marble: 1765 },
+    17: { wood: 4178, marble: 2131 },
+    18: { wood: 4945, marble: 2571 },
+    19: { wood: 5841, marble: 3098 },
+    20: { wood: 6890, marble: 3731 },
+    21: { wood: 8117, marble: 4491 },
+    22: { wood: 9551, marble: 5402 },
+    23: { wood: 11229, marble: 6496 },
+    24: { wood: 13190, marble: 7809 },
+    25: { wood: 15484, marble: 9384 },
+    26: { wood: 18165, marble: 11275 },
+    27: { wood: 21299, marble: 13543 },
+    28: { wood: 24963, marble: 16265 },
+    29: { wood: 29245, marble: 19531 },
+    30: { wood: 34249, marble: 23451 },
+    31: { wood: 40096, marble: 28154 },
+    32: { wood: 46930, marble: 33799 },
+    33: { wood: 54928, marble: 40575 },
+    34: { wood: 64290, marble: 48711 },
+    35: { wood: 75248, marble: 58478 },
+    36: { wood: 88074, marble: 70203 },
+    37: { wood: 103085, marble: 84279 },
+    38: { wood: 120655, marble: 101178 },
+    39: { wood: 141220, marble: 121464 },
+    40: { wood: 165290, marble: 145818 },
+    41: { wood: 193462, marble: 175056 },
+    42: { wood: 226436, marble: 210155 },
+    43: { wood: 265030, marble: 252292 },
+    44: { wood: 310202, marble: 302878 },
+    45: { wood: 363073, marble: 363607 },
+    46: { wood: 424955, marble: 436512 },
+    47: { wood: 497385, marble: 524034 },
+    48: { wood: 582160, marble: 629105 },
+    49: { wood: 681384, marble: 755244 },
+    50: { wood: 797520, marble: 906674 },
+};
+
+const WINE_REDUCER: Record<number, BuildingCost> = {
+    1: { wood: 339, marble: 123 },
+    2: { wood: 423, marble: 198 },
+    3: { wood: 520, marble: 285 },
+    4: { wood: 631, marble: 387 },
+    5: { wood: 758, marble: 504 },
+    6: { wood: 905, marble: 640 },
+    7: { wood: 1074, marble: 798 },
+    8: { wood: 1269, marble: 981 },
+    9: { wood: 1492, marble: 1194 },
+    10: { wood: 1749, marble: 1440 },
+    11: { wood: 2045, marble: 1726 },
+    12: { wood: 2384, marble: 2058 },
+    13: { wood: 2775, marble: 2443 },
+    14: { wood: 3225, marble: 2889 },
+    15: { wood: 3741, marble: 3407 },
+    16: { wood: 4336, marble: 4008 },
+    17: { wood: 5019, marble: 4705 },
+    18: { wood: 5805, marble: 5513 },
+    19: { wood: 6709, marble: 6450 },
+    20: { wood: 7749, marble: 7538 },
+    21: { wood: 8944, marble: 8800 },
+    22: { wood: 10319, marble: 10263 },
+    23: { wood: 11900, marble: 11961 },
+    24: { wood: 13718, marble: 13930 },
+    25: { wood: 15809, marble: 16214 },
+    26: { wood: 18214, marble: 18864 },
+    27: { wood: 20979, marble: 21938 },
+    28: { wood: 24159, marble: 25503 },
+    29: { wood: 27816, marble: 29639 },
+    30: { wood: 32021, marble: 34437 },
+    31: { wood: 36858, marble: 40002 },
+    32: { wood: 42419, marble: 46458 },
+    33: { wood: 48819, marble: 53955 },
+    34: { wood: 56184, marble: 62664 },
+    35: { wood: 64661, marble: 72777 },
+    36: { wood: 74417, marble: 84523 },
+    37: { wood: 85645, marble: 98164 },
+    38: { wood: 98567, marble: 114007 },
+    39: { wood: 113438, marble: 132407 },
+    40: { wood: 130553, marble: 153776 },
+    41: { wood: 150251, marble: 178595 },
+    42: { wood: 172920, marble: 207419 },
+    43: { wood: 199010, marble: 240894 },
+    44: { wood: 229036, marble: 279773 },
+    45: { wood: 263592, marble: 324926 },
+    46: { wood: 303362, marble: 377366 },
+    47: { wood: 349132, marble: 438270 },
+    48: { wood: 401808, marble: 509004 },
+    49: { wood: 462431, marble: 591153 },
+    50: { wood: 532201, marble: 686560 },
+};
+
+const MARBLE_REDUCER: Record<number, BuildingCost> = {
+    1: { wood: 185, marble: 106 },
+    2: { wood: 291, marble: 160 },
+    3: { wood: 413, marble: 222 },
+    4: { wood: 555, marble: 295 },
+    5: { wood: 720, marble: 379 },
+    6: { wood: 911, marble: 475 },
+    7: { wood: 1133, marble: 587 },
+    8: { wood: 1390, marble: 716 },
+    9: { wood: 1689, marble: 865 },
+    10: { wood: 2035, marble: 1036 },
+    11: { wood: 2437, marble: 1233 },
+    12: { wood: 2902, marble: 1460 },
+    13: { wood: 3443, marble: 1722 },
+    14: { wood: 4070, marble: 2023 },
+    15: { wood: 4797, marble: 2369 },
+    16: { wood: 5640, marble: 2767 },
+    17: { wood: 6619, marble: 3226 },
+    18: { wood: 7754, marble: 3753 },
+    19: { wood: 9070, marble: 4359 },
+    20: { wood: 10598, marble: 5056 },
+    21: { wood: 12369, marble: 5857 },
+    22: { wood: 14424, marble: 6778 },
+    23: { wood: 16808, marble: 7836 },
+    24: { wood: 19573, marble: 9052 },
+    25: { wood: 22781, marble: 10449 },
+    26: { wood: 26502, marble: 12055 },
+    27: { wood: 30818, marble: 13899 },
+    28: { wood: 35825, marble: 16017 },
+    29: { wood: 41633, marble: 18451 },
+    30: { wood: 48371, marble: 21246 },
+    31: { wood: 56186, marble: 24455 },
+    32: { wood: 65252, marble: 28141 },
+    33: { wood: 75780, marble: 32382 },
+    34: { wood: 88008, marble: 37263 },
+    35: { wood: 102209, marble: 42880 },
+    36: { wood: 118701, marble: 49343 },
+    37: { wood: 137854, marble: 56780 },
+    38: { wood: 160098, marble: 65338 },
+    39: { wood: 185931, marble: 75186 },
+    40: { wood: 215933, marble: 86519 },
+    41: { wood: 250775, marble: 99560 },
+    42: { wood: 291239, marble: 114566 },
+    43: { wood: 338233, marble: 131834 },
+    44: { wood: 392809, marble: 151705 },
+    45: { wood: 456192, marble: 174571 },
+    46: { wood: 529802, marble: 200884 },
+    47: { wood: 615289, marble: 231162 },
+    48: { wood: 714570, marble: 266004 },
+    49: { wood: 829871, marble: 306098 },
+    50: { wood: 963777, marble: 352235 },
+};
+
+const CRYSTAL_REDUCER: Record<number, BuildingCost> = {
+    1: { wood: 119, marble: 0 },
+    2: { wood: 188, marble: 35 },
+    3: { wood: 269, marble: 96 },
+    4: { wood: 362, marble: 167 },
+    5: { wood: 471, marble: 249 },
+    6: { wood: 597, marble: 345 },
+    7: { wood: 742, marble: 455 },
+    8: { wood: 912, marble: 584 },
+    9: { wood: 1108, marble: 733 },
+    10: { wood: 1335, marble: 905 },
+    11: { wood: 1600, marble: 1106 },
+    12: { wood: 1906, marble: 1338 },
+    13: { wood: 2261, marble: 1608 },
+    14: { wood: 2673, marble: 1921 },
+    15: { wood: 3152, marble: 2283 },
+    16: { wood: 3706, marble: 2704 },
+    17: { wood: 4350, marble: 3192 },
+    18: { wood: 5096, marble: 3759 },
+    19: { wood: 5962, marble: 4416 },
+    20: { wood: 6966, marble: 5178 },
+    21: { wood: 8131, marble: 6062 },
+    22: { wood: 9482, marble: 7087 },
+    23: { wood: 11050, marble: 8276 },
+    24: { wood: 12868, marble: 9656 },
+    25: { wood: 14978, marble: 11257 },
+    26: { wood: 17424, marble: 13113 },
+    27: { wood: 20263, marble: 15267 },
+    28: { wood: 23555, marble: 17765 },
+    29: { wood: 27374, marble: 20663 },
+    30: { wood: 31805, marble: 24025 },
+    31: { wood: 36944, marble: 27924 },
+    32: { wood: 42905, marble: 32448 },
+    33: { wood: 49827, marble: 37704 },
+    34: { wood: 57867, marble: 43813 },
+    35: { wood: 67204, marble: 50911 },
+    36: { wood: 78048, marble: 59160 },
+    37: { wood: 90641, marble: 68744 },
+    38: { wood: 105266, marble: 79882 },
+    39: { wood: 122251, marble: 92823 },
+    40: { wood: 141977, marble: 107862 },
+    41: { wood: 164886, marble: 125337 },
+    42: { wood: 191490, marble: 145643 },
+    43: { wood: 222388, marble: 169239 },
+    44: { wood: 258271, marble: 196657 },
+    45: { wood: 299943, marble: 228518 },
+    46: { wood: 348340, marble: 265541 },
+    47: { wood: 404545, marble: 308562 },
+    48: { wood: 469820, marble: 358552 },
+    49: { wood: 545626, marble: 416642 },
+    50: { wood: 633665, marble: 484142 },
+};
+
+const SULPHUR_REDUCER: Record<number, BuildingCost> = {
+    1: { wood: 273, marble: 135 },
+    2: { wood: 353, marble: 212 },
+    3: { wood: 445, marble: 302 },
+    4: { wood: 551, marble: 405 },
+    5: { wood: 673, marble: 526 },
+    6: { wood: 813, marble: 665 },
+    7: { wood: 974, marble: 827 },
+    8: { wood: 1159, marble: 1015 },
+    9: { wood: 1373, marble: 1233 },
+    10: { wood: 1618, marble: 1486 },
+    11: { wood: 1899, marble: 1779 },
+    12: { wood: 2223, marble: 2120 },
+    13: { wood: 2596, marble: 2514 },
+    14: { wood: 3025, marble: 2972 },
+    15: { wood: 3517, marble: 3503 },
+    16: { wood: 4084, marble: 4119 },
+    17: { wood: 4736, marble: 4834 },
+    18: { wood: 5486, marble: 5662 },
+    19: { wood: 6347, marble: 6624 },
+    20: { wood: 7339, marble: 7739 },
+    21: { wood: 8479, marble: 9033 },
+    22: { wood: 9790, marble: 10534 },
+    23: { wood: 11297, marble: 12275 },
+    24: { wood: 13031, marble: 14294 },
+    25: { wood: 15025, marble: 16637 },
+    26: { wood: 17318, marble: 19354 },
+    27: { wood: 19955, marble: 22507 },
+    28: { wood: 22987, marble: 26163 },
+    29: { wood: 26474, marble: 30405 },
+    30: { wood: 30484, marble: 35325 },
+    31: { wood: 35096, marble: 41033 },
+    32: { wood: 40400, marble: 47653 },
+    33: { wood: 46505, marble: 55341 },
+    34: { wood: 53533, marble: 64269 },
+    35: { wood: 61624, marble: 74638 },
+    36: { wood: 70937, marble: 86679 },
+    37: { wood: 81658, marble: 100664 },
+    38: { wood: 93999, marble: 116904 },
+    39: { wood: 108205, marble: 135765 },
+    40: { wood: 124557, marble: 157668 },
+    41: { wood: 143382, marble: 183106 },
+    42: { wood: 165051, marble: 212647 },
+    43: { wood: 189995, marble: 246954 },
+    44: { wood: 218708, marble: 286796 },
+    45: { wood: 251761, marble: 333066 },
+    46: { wood: 289810, marble: 386801 },
+    47: { wood: 333608, marble: 449205 },
+    48: { wood: 384026, marble: 521677 },
+    49: { wood: 442063, marble: 605841 },
+    50: { wood: 508872, marble: 703583 },
+};
+
 const SHRINE: Record<number, BuildingCost> = {
     1: { wood: 890, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
     2: { wood: 1116, wine: 0, marble: 0, crystal: 0, sulphur: 0 },
@@ -197,14 +472,22 @@ const COVERNOR: Record<number, BuildingCost> = {
     20: { wood: 1015861754, wine: 736077360, marble: 822706132, crystal: 695173129, sulphur: 962393438 },
 };
 
-const getBuildingCosts = (
-    type: 'WOOD_BOOSTER' | 'LUXURY_BOOSTER' | 'SHRINE' | 'COVERNOR',
-): Record<number, BuildingCost> => {
+const getBuildingCosts = (type: Building): Record<number, BuildingCost> => {
     switch (type) {
         case 'WOOD_BOOSTER':
             return WOOD_BOOSTER;
         case 'LUXURY_BOOSTER':
             return LUXURY_BOOSTER;
+        case 'WOOD_REDUCER':
+            return WOOD_REDUCER;
+        case 'WINE_REDUCER':
+            return WINE_REDUCER;
+        case 'MARBLE_REDUCER':
+            return MARBLE_REDUCER;
+        case 'CRYSTAL_REDUCER':
+            return CRYSTAL_REDUCER;
+        case 'SULPHUR_REDUCER':
+            return SULPHUR_REDUCER;
         case 'SHRINE':
             return SHRINE;
         case 'COVERNOR':
@@ -213,14 +496,14 @@ const getBuildingCosts = (
 };
 
 export const calculateBuildCost = (
-    type: 'WOOD_BOOSTER' | 'LUXURY_BOOSTER' | 'SHRINE' | 'COVERNOR',
+    type: Building,
     level: number,
     city: Omit<City, 'name'> = {},
     research?: Research,
 ): number => calculateTotalCost(getBuildingCosts(type)[level] ?? {}, city, research);
 
 export const calculateBuildTotalCost = (
-    type: 'WOOD_BOOSTER' | 'LUXURY_BOOSTER' | 'SHRINE' | 'COVERNOR',
+    type: Building,
     from: number,
     to: number,
     city: Omit<City, 'name'> = {},
