@@ -1,132 +1,135 @@
 .addAccount {
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
-
-  .inputRow {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 2rem;
+    flex-direction: column;
+    gap: 0.25rem;
 
-    input, select {
-      width: 240px;
-      padding: 0;
+    .inputRow {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 2rem;
+
+        input,
+        select {
+            width: 240px;
+            padding: 0;
+        }
     }
-  }
 }
 
 .accountList {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
-
-  width: 90%;
-
-  .account {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
 
-    padding: 1rem;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    width: 90%;
 
-    .header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
+    .account {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
 
-    .accountDetailRow {
-      display: flex;
-      flex-direction: row;
-      gap: .5rem;
-    }
+        padding: 1rem;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
-    .nextSteps {
-      width: fit-content;
-
-      td, th {
-        padding: 0 .3rem;
-
-        &:not(:first-child) {
-          text-align: center;
+        .header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
 
-        ul {
-          margin: .25rem;
+        .accountDetailRow {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
         }
-      }
+
+        .nextSteps {
+            width: fit-content;
+
+            td,
+            th {
+                padding: 0 0.3rem;
+
+                &:not(:first-child) {
+                    text-align: center;
+                }
+
+                ul {
+                    margin: 0.25rem;
+                }
+            }
+        }
     }
-  }
 }
 
 .addIsland {
-  display: flex;
-  flex-direction: row;
-  gap: .25rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
 
-  input[type=number] {
-    width: 2rem;
-  }
+    input[type='number'] {
+        width: 2rem;
+    }
 }
 
 .islandList {
-  .island {
-    display: flex;
-    flex-direction: column;
+    .island {
+        display: flex;
+        flex-direction: column;
 
-    padding: 1rem;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        padding: 1rem;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
-    .islandDetails {
-      position: relative;
+        .islandDetails {
+            position: relative;
 
-      display: flex;
-      flex-direction: row;
-      gap: .5rem;
-      align-items: baseline;
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+            align-items: baseline;
 
-      .islandDeleteButton {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-    }
-
-    .cityTable {
-      width: fit-content;
-
-      th:first-child {
-        text-align: left;
-      }
-
-      .cityDelete {
-        padding-right: .5rem;
-      }
-
-      .building {
-        width: 70px;
-
-        input[type=number] {
-          width: 100%;
-          text-align: center;
+            .islandDeleteButton {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
         }
-      }
 
-      .helpingHands {
-        text-align: center;
-      }
+        .cityTable {
+            width: fit-content;
 
-      .production, .corruption {
-        text-align: center;
+            th:first-child {
+                text-align: left;
+            }
 
-        padding: 0 .3rem;
-      }
+            .cityDelete {
+                padding-right: 0.5rem;
+            }
 
-      .corruption.red {
-          color: #aa0303;
-      }
+            .building {
+                width: 70px;
+
+                input[type='number'] {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+
+            .helpingHands {
+                text-align: center;
+            }
+
+            .production,
+            .corruption {
+                text-align: center;
+
+                padding: 0 0.3rem;
+            }
+
+            .corruption.red {
+                color: #aa0303;
+            }
+        }
     }
-  }
 }
