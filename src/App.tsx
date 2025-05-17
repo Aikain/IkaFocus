@@ -8,7 +8,7 @@ import AddAccount from '@/components/AddAccount';
 import styles from '@/styles/app.module.scss';
 
 const App = () => {
-    const [servers, setServers] = useState<Server[]>();
+    const [servers, setServers] = useState<Server[]>([]);
     const [accounts, setAccounts] = useState<Account[]>(JSON.parse(localStorage.getItem('accounts') ?? '[]') ?? []);
 
     useEffect(() => {
