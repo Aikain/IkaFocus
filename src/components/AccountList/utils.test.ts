@@ -27,12 +27,12 @@ const EMPTY_ACCOUNT: Account = {
 };
 
 describe.concurrent('total production', () => {
-    test('wood: lvl 47, hh, technocracy, shrine 41 + PAN, wood booster 36, +25% server bonus', () => {
+    test('wood: lvl 47, hh, technocracy, shrine 41 + PAN, wood booster 34, +35% server bonus', () => {
         expect(
-            Math.floor(
+            round(
                 calculateWoodProduction(
                     { ...EMPTY_ISLAND, woodLevel: 47 },
-                    { helpingHands: true, selectedGod: 'PAN', woodBoosterLevel: 36 },
+                    { helpingHands: true, selectedGod: 'PAN', woodBoosterLevel: 34 },
                     {
                         ...EMPTY_ACCOUNT,
                         formOfGovernment: 'TECHNOCRACY',
@@ -40,14 +40,15 @@ describe.concurrent('total production', () => {
                         server: {
                             ...EMPTY_ACCOUNT.server,
                             bonuses: {
-                                wood: 25,
-                                wine: 25,
-                                crystal: 25,
+                                wood: 35,
+                                marble: 35,
                             },
                         },
                     },
                 ),
             ),
-        ).toBe(4943);
+        ).toBe(5258.85);
     });
 });
+
+const round = (n: number): number => Math.round(n * 100) / 100;
