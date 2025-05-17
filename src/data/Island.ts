@@ -148,8 +148,28 @@ const LUXURY_13_0_2: Record<number, { donation?: number; maxWorker?: number }> =
     41: { donation: 93745717, maxWorker: undefined },
 };
 
-export const getWoodDonation = (level: number): number => WOOD_13_0_2[level]?.donation ?? WOOD[level].donation;
-export const getWoodMaxWorker = (level: number): number => WOOD_13_0_2[level]?.maxWorker ?? WOOD[level].maxWorker;
+const WOOD_14_0_0: Record<number, { donation?: number; maxWorker?: number }> = {
+    1: { donation: 0, maxWorker: undefined },
+    15: { donation: undefined, maxWorker: 288 },
+    16: { donation: 58342, maxWorker: undefined },
+};
 
-export const getLuxuryDonation = (level: number): number => LUXURY_13_0_2[level]?.donation ?? LUXURY[level].donation;
-export const getLuxuryMaxWorker = (level: number): number => LUXURY_13_0_2[level]?.maxWorker ?? LUXURY[level].maxWorker;
+const LUXURY_14_0_0: Record<number, { donation?: number; maxWorker?: number }> = {
+    1: { donation: 0, maxWorker: undefined },
+    7: { donation: undefined, maxWorker: 133 },
+    8: { donation: 14105, maxWorker: 158 },
+    9: { donation: 19585, maxWorker: 184 },
+    10: { donation: 26919, maxWorker: undefined },
+    11: { donation: undefined, maxWorker: 240 },
+    12: { donation: 49637, maxWorker: undefined },
+};
+
+export const getWoodDonation = (level: number): number =>
+    WOOD_14_0_0[level]?.donation ?? WOOD_13_0_2[level]?.donation ?? WOOD[level].donation;
+export const getWoodMaxWorker = (level: number): number =>
+    WOOD_14_0_0[level]?.maxWorker ?? WOOD_13_0_2[level]?.maxWorker ?? WOOD[level].maxWorker;
+
+export const getLuxuryDonation = (level: number): number =>
+    LUXURY_14_0_0[level]?.donation ?? LUXURY_13_0_2[level]?.donation ?? LUXURY[level].donation;
+export const getLuxuryMaxWorker = (level: number): number =>
+    LUXURY_14_0_0[level]?.maxWorker ?? LUXURY_13_0_2[level]?.maxWorker ?? LUXURY[level].maxWorker;
