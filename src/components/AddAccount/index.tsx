@@ -7,7 +7,7 @@ import styles from '@/styles/account.module.scss';
 
 interface Props {
     addAccount: (account: Pick<Account, 'name' | 'server'>) => void;
-    servers?: Server[];
+    servers: Server[];
 }
 
 type CustomHTMLFormElement = FormEvent<HTMLFormElement> & {
@@ -17,10 +17,11 @@ type CustomHTMLFormElement = FormEvent<HTMLFormElement> & {
 const AddAccount = ({ addAccount, servers }: Props) => {
     const handleSubmit = (e: CustomHTMLFormElement) => {
         e.preventDefault();
-        addAccount({
-            name: e.target.name.value,
-            server: servers?.find(({ id }) => id === e.target.server.value)!,
-        });
+
+        const server = servers.find(({ id }) => id === e.target.server.value);
+        if (!server) return;
+
+        addAccount({ name: e.target.name.value, server });
     };
 
     return servers ? (

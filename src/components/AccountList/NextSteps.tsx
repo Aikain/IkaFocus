@@ -25,7 +25,7 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
             return `<b>${target.name}</b>: <b>Jumalien pyhäkkö</b> ${target.shrineLevel ?? 0} ⇛ ${(target.shrineLevel ?? 0) + 1}`;
         case 'UPGRADE_COVERNOR':
             return `<b>${target.name}</b>: <b>Kuvernöörin asunto</b> ${target.governorLevel ?? 0} ⇛ ${(target.governorLevel ?? 0) + 1}`;
-        case 'CREATE_NEW_CITY':
+        case 'CREATE_NEW_CITY': {
             const {
                 woodReduceLevel,
                 marbleReduceLevel,
@@ -55,6 +55,7 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
                             <li>Muut tarvittavat kuvet</li>
                         </ul>
                     </div>`;
+        }
     }
 };
 
