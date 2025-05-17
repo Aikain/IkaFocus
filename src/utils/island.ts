@@ -8,7 +8,6 @@ export const getBasicProduction = (
     helpingHands: boolean = false,
     formOfGovernment: FormOfGovernment,
 ): number =>
-    // Integers are used here to avoid precision errors caused by floating point
     (type === 'wood' ? getWoodMaxWorker : getLuxuryMaxWorker)(level) +
     getHelpingHandMaxWorkers(type, level, helpingHands) * 0.25 * (formOfGovernment === 'TECHNOCRACY' ? 1.2 : 1);
 
