@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
 import { Account, CreateNewCity, NextStep } from '@/types';
-import { convertIslandToText, getRelativeTimeString } from '@/utils';
+import { convertIslandToText, getRelativeTimeString, translateLuxuryBooster, translateLuxuryResource } from '@/utils';
 
 import { calculateNextSteps } from '@/components/AccountList/utils.ts';
 
@@ -14,16 +14,16 @@ interface Props {
 const generateStepText = ({ target, type, ...rest }: NextStep): string => {
     switch (type) {
         case 'UPGRADE_WOOD':
-            return `<b>${convertIslandToText(target)}</b>: <b>saha</b> ${target.woodLevel} ⇛ ${target.woodLevel + 1}`;
+            return `<b>${convertIslandToText(target)}</b>: <b>Saha</b> ${target.woodLevel} ⇛ ${target.woodLevel + 1}`;
         case 'UPGRADE_LUXURY':
-            return `<b>${convertIslandToText(target)}</b>: <b>yleellisuusresurssi</b> ${target.luxuryLevel} ⇛ ${target.luxuryLevel + 1}`;
+            return `<b>${convertIslandToText(target)}</b>: <b>${translateLuxuryResource(target.luxuryResource)}</b> ${target.luxuryLevel} ⇛ ${target.luxuryLevel + 1}`;
         case 'UPGRADE_WOOD_BOOSTER':
-            return `<b>${target.name}</b>: <b>metsänhoitajan talo</b> ${target.woodBoosterLevel ?? 0} ⇛ ${(target.woodBoosterLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>Metsänhoitajan talo</b> ${target.woodBoosterLevel ?? 0} ⇛ ${(target.woodBoosterLevel ?? 0) + 1}`;
         case 'UPGRADE_LUXURY_BOOSTER':
-            return `<b>${target.name}</b>: <b>yleellisyysresurssin lisääjä</b> ${target.luxuryBoosterLevel ?? 0} ⇛ ${(target.luxuryBoosterLevel ?? 0) + 1}`;
+            return `<b>${target.name}</b>: <b>${translateLuxuryBooster(target.luxuryResource)}</b> ${target.luxuryBoosterLevel ?? 0} ⇛ ${(target.luxuryBoosterLevel ?? 0) + 1}`;
         case 'UPGRADE_SHRINE':
             return `<b>${target.name}</b>: <b>Jumalien pyhäkkö</b> ${target.shrineLevel ?? 0} ⇛ ${(target.shrineLevel ?? 0) + 1}`;
-        case 'UPGRADE_COVERNOR':
+        case 'UPGRADE_GOVERNOR':
             return `<b>${target.name}</b>: <b>Kuvernöörin asunto</b> ${target.governorLevel ?? 0} ⇛ ${(target.governorLevel ?? 0) + 1}`;
         case 'CREATE_NEW_CITY': {
             const {
@@ -35,6 +35,7 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
                 governorLevel,
                 luxuryBoosterLevel,
                 woodBoosterLevel,
+                luxuryResource,
             } = (rest as CreateNewCity).buildings;
             const tmp = [
                 ...((woodReduceLevel ?? 0) > 0 ? [`<b>Puusepän Paja</b> 0 ⇛ ${woodReduceLevel}`] : []),
@@ -45,7 +46,7 @@ const generateStepText = ({ target, type, ...rest }: NextStep): string => {
                 ...((governorLevel ?? 0) > 0 ? [`<b>Kuvernöörin asunto</b> 0 ⇛ ${governorLevel}`] : []),
                 ...((woodBoosterLevel ?? 0) > 0 ? [`<b>Metsänhoitajan Talo</b> 0 ⇛ ${woodBoosterLevel}`] : []),
                 ...((luxuryBoosterLevel ?? 0) > 0
-                    ? [`<b>Yleellisuusresurssin lisääjä</b> 0 ⇛ ${luxuryBoosterLevel}`]
+                    ? [`<b>${translateLuxuryBooster(luxuryResource)}</b> 0 ⇛ ${luxuryBoosterLevel}`]
                     : []),
             ];
             return `<div>
