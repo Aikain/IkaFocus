@@ -1,4 +1,4 @@
-import { FormOfGovernment, God, Island, Server } from '@/types';
+import { FormOfGovernment, God, Island, LuxuryResource, Server } from '@/types';
 
 const translateServerNumberToName = (number: number): string => {
     switch (number) {
@@ -67,5 +67,31 @@ export const translateGod = (god: God): string => {
             return 'Theia (Kristalli)';
         case 'HEPHAESTUS':
             return 'Hephaestus (Rikki)';
+    }
+};
+
+export const translateLuxuryBooster = (luxuryResource: LuxuryResource): string => {
+    switch (luxuryResource) {
+        case 'WINE':
+            return 'Viinitarhuri';
+        case 'MARBLE':
+            return 'Kivenhakkaaja';
+        case 'CRYSTAL':
+            return 'Lasinpuhaltaja';
+        case 'SULPHUR':
+            return 'Alkemistin Torni';
+    }
+};
+
+export const translateLuxuryResource = (luxuryResource: LuxuryResource): string => {
+    switch (luxuryResource) {
+        case 'WINE':
+            return 'Viinitarha';
+        case 'MARBLE':
+            return 'Kivilouhos';
+        case 'CRYSTAL':
+            return 'Kristallikaivos';
+        case 'SULPHUR':
+            return 'Rikkimonttu';
     }
 };

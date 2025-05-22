@@ -22,6 +22,7 @@ const AddCity = ({ addCity }: Props) => {
                 y: parseInt(e.target.y.value),
             },
             {
+                luxuryResource: e.target.luxuryResource.value as LuxuryResource,
                 name: e.target.name.value,
             },
         );

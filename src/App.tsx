@@ -7,9 +7,20 @@ import AddAccount from '@/components/AddAccount';
 
 import styles from '@/styles/app.module.scss';
 
+const fixOldAccounts = (accounts: Account[]): Account[] =>
+    accounts.map(({ islands, ...rest }) => ({
+        ...rest,
+        islands: islands.map(({ cities, ...rest }) => ({
+            ...rest,
+            cities: cities.map((city) => ({ ...city, luxuryResource: rest.luxuryResource })),
+        })),
+    }));
+
 const App = () => {
     const [servers, setServers] = useState<Server[]>([]);
-    const [accounts, setAccounts] = useState<Account[]>(JSON.parse(localStorage.getItem('accounts') ?? '[]') ?? []);
+    const [accounts, setAccounts] = useState<Account[]>(
+        fixOldAccounts(JSON.parse(localStorage.getItem('accounts') ?? '[]') ?? []),
+    );
 
     useEffect(() => {
         fetch('/api/servers.json')

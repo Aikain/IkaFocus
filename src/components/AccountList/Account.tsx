@@ -1,3 +1,4 @@
+import { CITY_MAX_COUNT } from '@/data/constant.ts';
 import { Account as AccountType, City, Island } from '@/types';
 import { generateServerName } from '@/utils';
 
@@ -53,7 +54,7 @@ const Account = ({ account, deleteAccount, updateAccount }: Props) => {
             </div>
             <AccountDetails account={account} updateAccount={updateAccount} />
             <IslandList account={account} islands={account.islands} updateIslands={handleUpdateIslands} />
-            {account.cityCount < 21 ? <AddCity addCity={handleAddCity} /> : null}
+            {account.cityCount < CITY_MAX_COUNT ? <AddCity addCity={handleAddCity} /> : null}
             <NextSteps account={account} />
         </div>
     );

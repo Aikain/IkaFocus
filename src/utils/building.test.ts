@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 
 import { calculateBuildCost, calculateBuildTotalCost } from './building.ts';
 
-const MAX_REDUCERS: Omit<City, 'name'> = {
+const MAX_REDUCERS: Omit<City, 'name' | 'luxuryResource'> = {
     woodReduceLevel: 50,
     wineReduceLevel: 50,
     marbleReduceLevel: 50,
@@ -13,184 +13,292 @@ const MAX_REDUCERS: Omit<City, 'name'> = {
 
 describe.concurrent('cost', () => {
     test("Forester's House: lvl 3", () => {
-        expect(calculateBuildCost('WOOD_BOOSTER', 3)).toBe(664 + 237);
+        expect(calculateBuildCost('WOOD_BOOSTER', 3, { luxuryResource: 'MARBLE' })).toBe(366 + 115);
     });
 
     test("Forester's House: lvl 20, wood -7%, Pulley", () => {
-        expect(calculateBuildCost('WOOD_BOOSTER', 20, { woodReduceLevel: 7 }, 'PULLEY')).toBe(
-            Math.floor((87365 * (100 - 7 - 2)) / 100) + Math.floor((49590 * (100 - 2)) / 100),
+        expect(calculateBuildCost('WOOD_BOOSTER', 20, { luxuryResource: 'MARBLE', woodReduceLevel: 7 }, 'PULLEY')).toBe(
+            Math.floor((72378 * (100 - 7 - 2)) / 100) + Math.floor((39416 * (100 - 2)) / 100),
         );
     });
 
     test("Forester's House: lvl 35, max reducers, Spirit Level", () => {
-        expect(calculateBuildCost('WOOD_BOOSTER', 35, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            Math.floor((4489711 * (100 - 50 - 14)) / 100) + Math.floor((2555649 * (100 - 50 - 14)) / 100),
-        );
+        expect(
+            calculateBuildCost('WOOD_BOOSTER', 35, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL'),
+        ).toBe(Math.floor((4590364 * (100 - 50 - 14)) / 100) + Math.floor((2548570 * (100 - 50 - 14)) / 100));
     });
 
     test('Stonemason: lvl 7', () => {
-        expect(calculateBuildCost('LUXURY_BOOSTER', 7)).toBe(2738 + 1375);
+        expect(calculateBuildCost('LUXURY_BOOSTER', 7, { luxuryResource: 'MARBLE' })).toBe(1324 + 669);
     });
 
     test('Stonemason: lvl 23, wood -13%, wine -4%, Geometry', () => {
-        expect(calculateBuildCost('LUXURY_BOOSTER', 23, { woodReduceLevel: 13, wineReduceLevel: 4 }, 'GEOMETRY')).toBe(
-            Math.floor((206472 * (100 - 13 - 6)) / 100) + Math.floor((114290 * (100 - 6)) / 100),
-        );
+        expect(
+            calculateBuildCost(
+                'LUXURY_BOOSTER',
+                23,
+                { luxuryResource: 'MARBLE', woodReduceLevel: 13, wineReduceLevel: 4 },
+                'GEOMETRY',
+            ),
+        ).toBe(Math.floor((175396 * (100 - 13 - 6)) / 100) + Math.floor((98470 * (100 - 6)) / 100));
     });
 
     test('Stonemason: lvl 32, max reducers, Spirit level', () => {
-        expect(calculateBuildCost('LUXURY_BOOSTER', 32, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            Math.floor((2193090 * (100 - 50 - 14)) / 100) + Math.floor((1215330 * (100 - 50 - 14)) / 100),
-        );
+        expect(
+            calculateBuildCost('LUXURY_BOOSTER', 32, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL'),
+        ).toBe(Math.floor((2128021 * (100 - 50 - 14)) / 100) + Math.floor((1191607 * (100 - 50 - 14)) / 100));
     });
 
     test('Shrine: lvl 15', () => {
-        expect(calculateBuildCost('SHRINE', 15)).toBe(21162 + 1839 + 3017 + 1252 + 429);
+        expect(calculateBuildCost('SHRINE', 15, { luxuryResource: 'MARBLE' })).toBe(17420 + 1629 + 2408 + 1245 + 557);
     });
 
     test('Shrine: lvl 22, crystal -15%, sulphur -6%, Spirit Level', () => {
         expect(
-            calculateBuildCost('SHRINE', 22, { crystalReduceLevel: 15, sulphurReduceLevel: 6 }, 'SPIRIT_LEVEL'),
+            calculateBuildCost(
+                'SHRINE',
+                22,
+                { luxuryResource: 'MARBLE', crystalReduceLevel: 15, sulphurReduceLevel: 6 },
+                'SPIRIT_LEVEL',
+            ),
         ).toBe(
-            Math.floor((103190 * (100 - 14)) / 100) +
+            Math.floor((97349 * (100 - 14)) / 100) +
                 Math.floor((8870 * (100 - 14)) / 100) +
-                Math.floor((18230 * (100 - 14)) / 100) +
-                Math.floor((7567 * (100 - 15 - 14)) / 100) +
-                Math.floor((3327 * (100 - 6 - 14)) / 100),
+                Math.floor((16846 * (100 - 14)) / 100) +
+                Math.floor((8144 * (100 - 15 - 14)) / 100) +
+                Math.floor((4416 * (100 - 6 - 14)) / 100),
         );
     });
 
     test('Shrine: lvl 41, max reducers, Spirit Level', () => {
-        expect(calculateBuildCost('SHRINE', 41, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            Math.floor((7608367 * (100 - 50 - 14)) / 100) +
-                Math.floor((634434 * (100 - 50 - 14)) / 100) +
-                Math.floor((2405243 * (100 - 50 - 14)) / 100) +
-                Math.floor((998361 * (100 - 50 - 14)) / 100) +
-                Math.floor((864959 * (100 - 50 - 14)) / 100),
+        expect(calculateBuildCost('SHRINE', 41, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL')).toBe(
+            Math.floor((7547835 * (100 - 50 - 14)) / 100) +
+                Math.floor((619342 * (100 - 50 - 14)) / 100) +
+                Math.floor((2394492 * (100 - 50 - 14)) / 100) +
+                Math.floor((960142 * (100 - 50 - 14)) / 100) +
+                Math.floor((801766 * (100 - 50 - 14)) / 100),
         );
     });
 
-    test('Covernor: lvl 6', () => {
-        expect(calculateBuildCost('COVERNOR', 6)).toBe(159184 + 44534 + 48114 + 42400 + 53573);
-    });
-
-    test('Covernor: lvl 8, marble -7%, Spirit Level', () => {
-        expect(calculateBuildCost('COVERNOR', 8, { marbleReduceLevel: 7 }, 'SPIRIT_LEVEL')).toBe(
-            Math.floor((649936 * (100 - 14)) / 100) +
-                Math.floor((179078 * (100 - 14)) / 100) +
-                Math.floor((197490 * (100 - 7 - 14)) / 100) +
-                Math.floor((169672 * (100 - 14)) / 100) +
-                Math.floor((226661 * (100 - 14)) / 100),
+    test('GOVERNOR: lvl 6', () => {
+        expect(calculateBuildCost('GOVERNOR', 6, { luxuryResource: 'MARBLE' })).toBe(
+            153646 + 35701 + 36829 + 36765 + 38626,
         );
     });
 
-    test('Covernor: lvl 15, max reducers, Spirit Level', () => {
-        expect(calculateBuildCost('COVERNOR', 15, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            Math.floor((51520771 * (100 - 50 - 14)) / 100) +
-                Math.floor((22977258 * (100 - 50 - 14)) / 100) +
-                Math.floor((25574331 * (100 - 50 - 14)) / 100) +
-                Math.floor((21722240 * (100 - 50 - 14)) / 100) +
-                Math.floor((29739739 * (100 - 50 - 14)) / 100),
+    test('GOVERNOR: lvl 8, marble -7%, Spirit Level', () => {
+        expect(
+            calculateBuildCost('GOVERNOR', 8, { luxuryResource: 'MARBLE', marbleReduceLevel: 7 }, 'SPIRIT_LEVEL'),
+        ).toBe(
+            Math.floor((609013 * (100 - 14)) / 100) +
+                Math.floor((151004 * (100 - 14)) / 100) +
+                Math.floor((171872 * (100 - 7 - 14)) / 100) +
+                Math.floor((143096 * (100 - 14)) / 100) +
+                Math.floor((183448 * (100 - 14)) / 100),
+        );
+    });
+
+    test('GOVERNOR: lvl 15, max reducers, Spirit Level', () => {
+        expect(calculateBuildCost('GOVERNOR', 15, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL')).toBe(
+            Math.floor((50768236 * (100 - 50 - 14)) / 100) +
+                Math.floor((23118434 * (100 - 50 - 14)) / 100) +
+                Math.floor((26290071 * (100 - 50 - 14)) / 100) +
+                Math.floor((21641682 * (100 - 50 - 14)) / 100) +
+                Math.floor((29726495 * (100 - 50 - 14)) / 100),
         );
     });
 });
 
 describe.concurrent('total cost', () => {
-    test("Forester's House: lvl 0 -> 61", () => {
-        expect(calculateBuildTotalCost('WOOD_BOOSTER', 0, 61)).toBe(17868072086 + 10179257792);
+    test("Forester's House: lvl 0 -> 50", () => {
+        expect(calculateBuildTotalCost('WOOD_BOOSTER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(1618806091);
     });
 
-    test("Forester's House: lvl 0 -> 61, max reducers, spirit level", () => {
-        expect(calculateBuildTotalCost('WOOD_BOOSTER', 0, 61, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            6432505920 + 3664532776, // calculated with excel
-        );
+    test("Forester's House: lvl 0 -> 50, max reducers, spirit level", () => {
+        expect(
+            calculateBuildTotalCost(
+                'WOOD_BOOSTER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(582770150);
     });
 
-    test('Luxury booster: lvl 0 -> 61', () => {
-        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 61)).toBe(19177819290 + 10637261737);
+    test('Winery: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 50, { luxuryResource: 'WINE' })).toBe(1721604428);
     });
 
-    test('Luxury booster: lvl 0 -> 61, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 61, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            6904014913 + 3829414195, // calculated with excel
-        );
+    test('Winery: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(
+            calculateBuildTotalCost(
+                'LUXURY_BOOSTER',
+                0,
+                50,
+                { luxuryResource: 'WINE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(619777543);
+    });
+
+    test('Stonemason: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(1708086215);
+    });
+
+    test('Stonemason: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(
+            calculateBuildTotalCost(
+                'LUXURY_BOOSTER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(614910987);
+    });
+
+    test('Glassblower: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 50, { luxuryResource: 'CRYSTAL' })).toBe(1714511301);
+    });
+
+    test('Glassblower: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(
+            calculateBuildTotalCost(
+                'LUXURY_BOOSTER',
+                0,
+                50,
+                { luxuryResource: 'CRYSTAL', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(617224021);
+    });
+
+    test('Alchemist`s Tower: lvl 0 -> 50', () => {
+        expect(calculateBuildTotalCost('LUXURY_BOOSTER', 0, 50, { luxuryResource: 'SULPHUR' })).toBe(1721458469);
+    });
+
+    test('Alchemist`s Tower: lvl 0 -> 50, max reducers, spirit level', () => {
+        expect(
+            calculateBuildTotalCost(
+                'LUXURY_BOOSTER',
+                0,
+                50,
+                { luxuryResource: 'SULPHUR', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(619725006);
     });
 
     test('Carpenter`s Workshop: lvl 0 -> 50', () => {
-        expect(calculateBuildTotalCost('WOOD_REDUCER', 0, 50)).toBe(5468029 + 5425650);
+        expect(calculateBuildTotalCost('WOOD_REDUCER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(10902448);
     });
 
     test('Carpenter`s Workshop: lvl 0 -> 50, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('WOOD_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            1968466 + 1953216, // calculated with excel
-        );
+        expect(
+            calculateBuildTotalCost(
+                'WOOD_REDUCER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(3924837);
     });
 
     test('Wine Press: lvl 0 -> 50', () => {
-        expect(calculateBuildTotalCost('WINE_REDUCER', 0, 50)).toBe(4052131 + 4931529);
+        expect(calculateBuildTotalCost('WINE_REDUCER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(8989654);
     });
 
     test('Wine Press: lvl 0 -> 50, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('WINE_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            1458744 + 1775328, // calculated with excel
-        );
+        expect(
+            calculateBuildTotalCost(
+                'WINE_REDUCER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(3236230);
     });
 
     test('Architect`s Office: lvl 0 -> 50', () => {
-        expect(calculateBuildTotalCost('MARBLE_REDUCER', 0, 50)).toBe(6924265 + 2681355);
+        expect(calculateBuildTotalCost('MARBLE_REDUCER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(9624801);
     });
 
     test('Architect`s Office: lvl 0 -> 50, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('MARBLE_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            2492710 + 965261, // calculated with excel
-        );
+        expect(
+            calculateBuildTotalCost(
+                'MARBLE_REDUCER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(3464878);
     });
 
     test('Optician: lvl 0 -> 50', () => {
-        expect(calculateBuildTotalCost('CRYSTAL_REDUCER', 0, 50)).toBe(4552609 + 3464349);
+        expect(calculateBuildTotalCost('CRYSTAL_REDUCER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(8043976);
     });
 
     test('Optician: lvl 0 -> 50, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('CRYSTAL_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            1638914 + 1247143, // calculated with excel
-        );
+        expect(
+            calculateBuildTotalCost(
+                'CRYSTAL_REDUCER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(2895787);
     });
 
     test('Firework Test Area: lvl 0 -> 50', () => {
-        expect(calculateBuildTotalCost('SULPHUR_REDUCER', 0, 50)).toBe(3868114 + 5055489);
+        expect(calculateBuildTotalCost('SULPHUR_REDUCER', 0, 50, { luxuryResource: 'MARBLE' })).toBe(8935079);
     });
 
     test('Firework Test Area: lvl 0 -> 50, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('SULPHUR_REDUCER', 0, 50, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            1392496 + 1819950, // calculated with excel
-        );
+        expect(
+            calculateBuildTotalCost(
+                'SULPHUR_REDUCER',
+                0,
+                50,
+                { luxuryResource: 'MARBLE', ...MAX_REDUCERS },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(3216579);
     });
 
     test('Shrine: lvl 0 -> 41', () => {
-        expect(calculateBuildTotalCost('SHRINE', 0, 41)).toBe(37559062 + 3151535 + 10613472 + 4404823 + 3408566);
+        expect(calculateBuildTotalCost('SHRINE', 0, 41, { luxuryResource: 'MARBLE' })).toBe(59141176);
     });
 
     test('Shrine: lvl 0 -> 41, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('SHRINE', 0, 41, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            13521243 + 1134532 + 3820830 + 1585718 + 1227071, // calculated with excel
-        );
-    });
-
-    test('Covernor: lvl 0 -> 16, wood -50%, marble -20%, Spirit Level', () => {
         expect(
-            calculateBuildTotalCost('COVERNOR', 0, 16, { woodReduceLevel: 50, marbleReduceLevel: 20 }, 'SPIRIT_LEVEL'),
-        ).toBe(398263731);
+            calculateBuildTotalCost('SHRINE', 0, 41, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL'),
+        ).toBe(21290734);
     });
 
-    test('Covernor: lvl 0 -> 20', () => {
-        expect(calculateBuildTotalCost('COVERNOR', 0, 20)).toBe(
-            2261086550 + 1471820149 + 1643666243 + 1390300393 + 1920460693,
-        );
+    test('GOVERNOR: lvl 0 -> 16, wood -50%, marble -20%, Spirit Level', () => {
+        expect(
+            calculateBuildTotalCost(
+                'GOVERNOR',
+                0,
+                16,
+                { luxuryResource: 'MARBLE', woodReduceLevel: 50, marbleReduceLevel: 20 },
+                'SPIRIT_LEVEL',
+            ),
+        ).toBe(397271164);
     });
 
-    test('Covernor: lvl 0 -> 20, max reducers, spirit level', () => {
-        expect(calculateBuildTotalCost('COVERNOR', 0, 20, MAX_REDUCERS, 'SPIRIT_LEVEL')).toBe(
-            813991148 + 529855246 + 591719839 + 500508133 + 691365841, // calculated with excel
-        );
+    test('GOVERNOR: lvl 0 -> 20', () => {
+        expect(calculateBuildTotalCost('GOVERNOR', 0, 20, { luxuryResource: 'MARBLE' })).toBe(8686865534);
+    });
+
+    test('GOVERNOR: lvl 0 -> 20, max reducers, spirit level', () => {
+        expect(
+            calculateBuildTotalCost('GOVERNOR', 0, 20, { luxuryResource: 'MARBLE', ...MAX_REDUCERS }, 'SPIRIT_LEVEL'),
+        ).toBe(3127271549);
     });
 });

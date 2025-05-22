@@ -32,7 +32,7 @@ describe.concurrent('total production', () => {
             round(
                 calculateWoodProduction(
                     { ...EMPTY_ISLAND, woodLevel: 47 },
-                    { helpingHands: true, selectedGod: 'PAN', woodBoosterLevel: 34 },
+                    { helpingHands: true, selectedGod: 'PAN', woodBoosterLevel: 34, luxuryResource: 'MARBLE' },
                     {
                         ...EMPTY_ACCOUNT,
                         formOfGovernment: 'TECHNOCRACY',
