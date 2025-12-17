@@ -1,20 +1,6 @@
 import { ChangeEvent, ReactNode } from 'react';
 
-import {
-    CRYSTAL_BOOSTER,
-    CRYSTAL_REDUCER,
-    GOVERNOR,
-    MARBLE_BOOSTER,
-    MARBLE_REDUCER,
-    SHRINE,
-    SULPHUR_BOOSTER,
-    SULPHUR_REDUCER,
-    WINE_BOOSTER,
-    WINE_REDUCER,
-    WOOD_BOOSTER,
-    WOOD_REDUCER,
-} from '@/data/building.ts';
-import { Account, City, God, Island as IslandType, LuxuryResource } from '@/types';
+import { Account, God, Island as IslandType, LuxuryResource } from '@/types';
 import { convertIslandToText, translateGod, translateLuxuryResource } from '@/utils';
 
 import {
@@ -22,8 +8,10 @@ import {
     calculateLuxuryProduction,
     calculateWoodProduction,
 } from '@/components/AccountList/utils.ts';
-
 import styles from '@/styles/account.module.scss';
+
+import { BUILDINGS } from './contants';
+import { BuildingKey } from './types';
 
 interface Props {
     account: Account;
@@ -45,32 +33,6 @@ const LUXURY_RESOURCE: Record<LuxuryResource, ReactNode> = {
     CRYSTAL: <img src='https://gf1.geo.gfsrv.net/cdn1e/417b4059940b2ae2680c070a197d8c.png' alt='Kristalli' />,
     SULPHUR: <img src='https://gf1.geo.gfsrv.net/cdn9b/5578a7dfa3e98124439cca4a387a61.png' alt='Rikki' />,
 };
-
-export type BuildingKey = keyof Omit<City, 'name' | 'helpingHands' | 'selectedGod' | 'luxuryResource'>;
-
-const findMaxLevel = (buildingDetails: Record<number, unknown>): number =>
-    Math.max(...Object.keys(buildingDetails).map((level) => parseInt(level)));
-
-export const BUILDINGS: { name: BuildingKey; min: number; max: number }[] = [
-    { name: 'governorLevel', min: 0, max: findMaxLevel(GOVERNOR) },
-    { name: 'woodBoosterLevel', min: 0, max: findMaxLevel(WOOD_BOOSTER) },
-    {
-        name: 'luxuryBoosterLevel',
-        min: 0,
-        max: Math.min(
-            findMaxLevel(WINE_BOOSTER),
-            findMaxLevel(MARBLE_BOOSTER),
-            findMaxLevel(CRYSTAL_BOOSTER),
-            findMaxLevel(SULPHUR_BOOSTER),
-        ),
-    },
-    { name: 'shrineLevel', min: 0, max: findMaxLevel(SHRINE) },
-    { name: 'woodReduceLevel', min: 0, max: findMaxLevel(WOOD_REDUCER) },
-    { name: 'wineReduceLevel', min: 0, max: findMaxLevel(WINE_REDUCER) },
-    { name: 'marbleReduceLevel', min: 0, max: findMaxLevel(MARBLE_REDUCER) },
-    { name: 'crystalReduceLevel', min: 0, max: findMaxLevel(CRYSTAL_REDUCER) },
-    { name: 'sulphurReduceLevel', min: 0, max: findMaxLevel(SULPHUR_REDUCER) },
-];
 
 const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
     const handleWoodLevelChange = (e: ChangeEvent<HTMLInputElement>) => {

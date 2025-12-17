@@ -4,7 +4,6 @@ import { Account, Server } from '@/types';
 
 import AccountList from '@/components/AccountList';
 import AddAccount from '@/components/AddAccount';
-
 import styles from '@/styles/app.module.scss';
 
 const fixOldAccounts = (accounts: Account[]): Account[] =>
