@@ -1,13 +1,13 @@
 import { ChangeEvent, ReactNode } from 'react';
 
-import { Account, God, Island as IslandType, LuxuryResource } from '@/types';
-import { convertIslandToText, translateGod, translateLuxuryResource } from '@/utils';
-
 import {
     calculateCorruptionPercent,
     calculateLuxuryProduction,
     calculateWoodProduction,
 } from '@/components/AccountList/utils.ts';
+import { Account, God, Island as IslandType, LuxuryResource } from '@/types';
+import { convertIslandToText, translateGod, translateLuxuryResource } from '@/utils';
+
 import styles from '@/styles/account.module.scss';
 
 import { BUILDINGS } from './contants';

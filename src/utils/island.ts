@@ -1,6 +1,5 @@
-import { FormOfGovernment } from '@/types';
-
 import { getLuxuryDonation, getLuxuryMaxWorker, getWoodDonation, getWoodMaxWorker } from '@/data/Island.ts';
+import { FormOfGovernment } from '@/types';
 
 export const getBasicProduction = (
     type: 'wood' | 'luxury',

@@ -1,11 +1,11 @@
-import { Account as AccountType, City, Island } from '@/types';
-import { generateServerName } from '@/utils';
-
 import AccountDetails from '@/components/AccountList/AccountDetails.tsx';
 import AddCity from '@/components/AccountList/AddCity.tsx';
 import IslandList from '@/components/AccountList/IslandList.tsx';
 import NextSteps from '@/components/AccountList/NextSteps.tsx';
 import { CITY_MAX_COUNT } from '@/data/constant.ts';
+import { Account as AccountType, City, Island } from '@/types';
+import { generateServerName } from '@/utils';
+
 import styles from '@/styles/account.module.scss';
 
 interface Props {

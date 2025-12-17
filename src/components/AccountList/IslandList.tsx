@@ -1,6 +1,6 @@
+import Island from '@/components/AccountList/Island.tsx';
 import { Account, Island as IslandType } from '@/types';
 
-import Island from '@/components/AccountList/Island.tsx';
 import styles from '@/styles/account.module.scss';
 
 interface Props {

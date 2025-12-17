@@ -12,7 +12,8 @@ const config: Config = {
     importOrder: [
         '^((react)(.*)$)|^((react)$)',
         '<THIRD_PARTY_MODULES>',
-        '^@/(components|data|styles|types|utils)/(.*)$',
+        '^@/(components|data|types|utils)(.*)$',
+        '^@/(styles)/(.*)$',
         '^[./]',
     ],
     importOrderSeparation: true,

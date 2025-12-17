@@ -1,3 +1,4 @@
+import { CITY_MAX_COUNT } from '@/data/constant.ts';
 import {
     Account,
     City,
@@ -10,8 +11,6 @@ import {
     UpgradeBuilding,
     UpgradeIslandProduction,
 } from '@/types';
-
-import { CITY_MAX_COUNT } from '@/data/constant.ts';
 
 import { calculateBuildCost, calculateBuildTotalCost } from '../../utils/building.ts';
 import { getBasicProduction, getCost } from '../../utils/island.ts';

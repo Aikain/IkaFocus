@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { Account, Server } from '@/types';
-
 import AccountList from '@/components/AccountList';
 import AddAccount from '@/components/AddAccount';
+import { Account, Server } from '@/types';
+
 import styles from '@/styles/app.module.scss';
 
 const fixOldAccounts = (accounts: Account[]): Account[] =>

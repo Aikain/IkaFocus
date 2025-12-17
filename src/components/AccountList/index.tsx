@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 
+import Account from '@/components/AccountList/Account.tsx';
 import { Account as AccountType } from '@/types';
 
-import Account from '@/components/AccountList/Account.tsx';
 import styles from '@/styles/account.module.scss';
 
 interface Props {
