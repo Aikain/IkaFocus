@@ -4,6 +4,8 @@ const translateServerNumberToName = (number: number): string => {
     switch (number) {
         case 9:
             return 'Iota';
+        case 10:
+            return 'Kappa';
         case 59:
             return 'Perseus';
         case 60:
