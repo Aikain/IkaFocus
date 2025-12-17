@@ -28,5 +28,14 @@
             "marble": 20,
             "sulphur": 25
         }
+    },
+    {
+        "id": "s10-se",
+        "community": "se",
+        "number": 10,
+        "bonuses": {
+            "wood": 45,
+            "marble": 45
+        }
     }
 ]

@@ -1,5 +1,6 @@
-import { Account, Island } from '@/types';
 import { describe, expect, test } from 'vitest';
+
+import { Account, Island } from '@/types';
 
 import { calculateWoodProduction } from './utils.ts';
 

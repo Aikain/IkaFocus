@@ -15,7 +15,13 @@ $("#buildingDetail table.table01")
     }, {});
 */
 
-export type BuildingCost = { wood?: number; wine?: number; marble?: number; crystal?: number; sulphur?: number };
+export interface BuildingCost {
+    wood?: number;
+    wine?: number;
+    marble?: number;
+    crystal?: number;
+    sulphur?: number;
+}
 
 export const WOOD_BOOSTER: Record<number, BuildingCost> = {
     1: {

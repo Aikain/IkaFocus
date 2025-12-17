@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 
+import { calculateNextSteps } from '@/components/AccountList/utils.ts';
 import { Account, CreateNewCity, NextStep } from '@/types';
 import { convertIslandToText, getRelativeTimeString, translateLuxuryBooster, translateLuxuryResource } from '@/utils';
-
-import { calculateNextSteps } from '@/components/AccountList/utils.ts';
 
 import styles from '@/styles/account.module.scss';
 

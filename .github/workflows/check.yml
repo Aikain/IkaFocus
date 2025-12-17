@@ -25,12 +25,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: yarn
           cache-dependency-path: yarn.lock
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Run lint
         run: yarn lint
@@ -57,12 +57,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: yarn
           cache-dependency-path: yarn.lock
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Run tests
         run: yarn test
@@ -81,12 +81,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: yarn
           cache-dependency-path: yarn.lock
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Run ts:check
         run: yarn ts:check

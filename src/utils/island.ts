@@ -4,13 +4,13 @@ import { FormOfGovernment } from '@/types';
 export const getBasicProduction = (
     type: 'wood' | 'luxury',
     level: number,
-    helpingHands: boolean = false,
+    helpingHands = false,
     formOfGovernment: FormOfGovernment,
 ): number =>
     (type === 'wood' ? getWoodMaxWorker : getLuxuryMaxWorker)(level) +
     getHelpingHandMaxWorkers(type, level, helpingHands) * 0.25 * (formOfGovernment === 'TECHNOCRACY' ? 1.2 : 1);
 
-const getHelpingHandMaxWorkers = (type: 'wood' | 'luxury', level: number, helpingHands: boolean = false): number =>
+const getHelpingHandMaxWorkers = (type: 'wood' | 'luxury', level: number, helpingHands = false): number =>
     helpingHands ? Math.floor((type === 'wood' ? getWoodMaxWorker : getLuxuryMaxWorker)(level) * 0.5) : 0;
 
 export const getCost = (type: 'UPGRADE_WOOD' | 'UPGRADE_LUXURY', level: number): number =>

@@ -12,10 +12,10 @@ import {
     UpgradeIslandProduction,
 } from '@/types';
 
-import { BUILDINGS, BuildingKey } from '@/components/AccountList/Island.tsx';
-
 import { calculateBuildCost, calculateBuildTotalCost } from '../../utils/building.ts';
 import { getBasicProduction, getCost } from '../../utils/island.ts';
+import { BUILDINGS } from './contants.ts';
+import { BuildingKey } from './types.ts';
 
 // TODO: premium
 // TODO: Cinetheatre
@@ -321,7 +321,7 @@ const calculateNewCityWithBooster = (
     account: Account,
     island: Island,
     city: Omit<City, 'name'>,
-    includeOtherCities: boolean = false,
+    includeOtherCities = false,
 ): Omit<CreateNewCity, 'paybackTime'> => {
     return {
         type: 'CREATE_NEW_CITY' as const,

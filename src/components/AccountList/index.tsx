@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { Account as AccountType } from '@/types';
-
 import Account from '@/components/AccountList/Account.tsx';
+import { Account as AccountType } from '@/types';
 
 import styles from '@/styles/account.module.scss';
 
