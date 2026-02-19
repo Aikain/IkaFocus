@@ -21,5 +21,10 @@ updates:
     schedule:
       interval: weekly
 
+    groups:
+      updates:
+        patterns:
+          - "*"
+
     assignees:
       - Aikain
