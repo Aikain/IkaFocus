@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { SubmitEventHandler } from 'react';
 
 import { Account, Server } from '@/types';
 import { generateServerName } from '@/utils';
@@ -10,18 +10,16 @@ interface Props {
     servers: Server[];
 }
 
-type CustomHTMLFormElement = FormEvent<HTMLFormElement> & {
-    target: { name: HTMLInputElement; server: HTMLInputElement };
-};
-
 const AddAccount = ({ addAccount, servers }: Props) => {
-    const handleSubmit = (e: CustomHTMLFormElement) => {
+    const handleSubmit: SubmitEventHandler<
+        HTMLFormElement & { target: { name: HTMLInputElement; server: HTMLInputElement } }
+    > = (e) => {
         e.preventDefault();
 
         const server = servers.find(({ id }) => id === e.target.server.value);
         if (!server) return;
 
-        addAccount({ name: e.target.name.value, server });
+        addAccount({ name: e.target.accoutName.value, server });
     };
 
     return servers ? (
@@ -38,8 +36,8 @@ const AddAccount = ({ addAccount, servers }: Props) => {
                 </select>
             </div>
             <div className={styles.inputRow}>
-                <label htmlFor='name'>Nimi</label>
-                <input type='text' id='name' name='name' />
+                <label htmlFor='accoutName'>Nimi</label>
+                <input type='text' id='accoutName' name='accoutName' />
             </div>
             <button type='submit'>Lisää tili</button>
         </form>

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { SubmitEventHandler } from 'react';
 
 import { City, Island, LuxuryResource } from '@/types';
 
@@ -8,12 +8,17 @@ interface Props {
     addCity: (island: Pick<Island, 'x' | 'y' | 'luxuryResource'>, city: City) => void;
 }
 
-type CustomHTMLFormElement = FormEvent<HTMLFormElement> & {
-    target: { x: HTMLInputElement; y: HTMLInputElement; luxuryResource: HTMLInputElement; name: HTMLInputElement };
-};
-
 const AddCity = ({ addCity }: Props) => {
-    const handleSubmit = (e: CustomHTMLFormElement) => {
+    const handleSubmit: SubmitEventHandler<
+        HTMLFormElement & {
+            target: {
+                x: HTMLInputElement;
+                y: HTMLInputElement;
+                luxuryResource: HTMLInputElement;
+                cityName: HTMLInputElement;
+            };
+        }
+    > = (e) => {
         e.preventDefault();
         addCity(
             {
@@ -23,7 +28,7 @@ const AddCity = ({ addCity }: Props) => {
             },
             {
                 luxuryResource: e.target.luxuryResource.value as LuxuryResource,
-                name: e.target.name.value,
+                name: e.target.cityName.value,
             },
         );
     };
@@ -38,7 +43,7 @@ const AddCity = ({ addCity }: Props) => {
                 <option value='CRYSTAL'>Kristalli</option>
                 <option value='SULPHUR'>Rikki</option>
             </select>
-            <input type='text' id='name' name='name' placeholder='Kaupungin nimi' />
+            <input type='text' id='cityName' name='cityName' placeholder='Kaupungin nimi' />
             <button type='submit'>Lisää kaupunki</button>
         </form>
     );
