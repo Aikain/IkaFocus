@@ -15,3 +15,11 @@ updates:
 
     assignees:
       - Aikain
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+    assignees:
+      - Aikain
