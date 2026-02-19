@@ -10,6 +10,7 @@ updates:
 
     groups:
       security-updates:
+        dependency-type: production
         applies-to: security-updates
 
     assignees:
