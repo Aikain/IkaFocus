@@ -3,8 +3,12 @@
     "eslint.options": {
         "flags": ["unstable_native_nodejs_ts_config"]
     },
+    "files.associations": {
+        "*.yml": "yaml"
+    },
     "files.exclude": {
         "**/.yarn": true,
+        "**/dist": true,
         "**/node_modules": true,
         "**/yarn.lock": true
     },
@@ -12,6 +16,9 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[scss]": {
@@ -24,6 +31,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[yaml]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml"
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.indentSize": 2
     }
 }
