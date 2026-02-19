@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+
+    # Disable non-security version updates
+    open-pull-requests-limit: 0
+
+    groups:
+      security-updates:
+        applies-to: security-updates
+
+    assignees:
+      - Aikain
