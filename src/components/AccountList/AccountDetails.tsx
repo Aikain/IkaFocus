@@ -1,6 +1,6 @@
-import { ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
 
-import { Account, Account as AccountType, FormOfGovernment, Research } from '@/types';
+import type { Account, Account as AccountType, FormOfGovernment, Research } from '@/types';
 import { translateFormOfGovernment } from '@/utils';
 
 import styles from '@/styles/account.module.scss';

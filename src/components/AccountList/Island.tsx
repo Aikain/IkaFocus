@@ -1,17 +1,17 @@
-import { ChangeEvent, ReactNode } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 
 import {
     calculateCorruptionPercent,
     calculateLuxuryProduction,
     calculateWoodProduction,
 } from '@/components/AccountList/utils.ts';
-import { Account, God, Island as IslandType, LuxuryResource } from '@/types';
+import type { Account, God, Island as IslandType, LuxuryResource } from '@/types';
 import { convertIslandToText, translateGod, translateLuxuryResource } from '@/utils';
 
 import styles from '@/styles/account.module.scss';
 
 import { BUILDINGS } from './contants';
-import { BuildingKey } from './types';
+import type { BuildingKey } from './types';
 
 interface Props {
     account: Account;

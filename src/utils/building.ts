@@ -1,5 +1,5 @@
 import {
-    BuildingCost,
+    type BuildingCost,
     CRYSTAL_BOOSTER,
     CRYSTAL_REDUCER,
     GOVERNOR,
@@ -14,7 +14,7 @@ import {
     WOOD_BOOSTER,
     WOOD_REDUCER,
 } from '@/data/building.ts';
-import { City, LuxuryResource, Research } from '@/types';
+import type { City, LuxuryResource, Research } from '@/types';
 
 type Building =
     | 'WOOD_BOOSTER'

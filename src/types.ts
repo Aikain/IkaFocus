@@ -12,14 +12,7 @@ export interface Server {
 }
 
 export type FormOfGovernment =
-    | 'IKACRACY'
-    | 'ARISTOCRACY'
-    | 'DEMOCRACY'
-    | 'DICTATORSHIP'
-    | 'NOMOCRACY'
-    | 'OLIGARCHY'
-    | 'TECHNOCRACY'
-    | 'THEOCRACY';
+    'IKACRACY' | 'ARISTOCRACY' | 'DEMOCRACY' | 'DICTATORSHIP' | 'NOMOCRACY' | 'OLIGARCHY' | 'TECHNOCRACY' | 'THEOCRACY';
 
 export type Research = 'PULLEY' | 'GEOMETRY' | 'SPIRIT_LEVEL';
 
