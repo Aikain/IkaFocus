@@ -1,4 +1,4 @@
-import { FormOfGovernment, God, Island, LuxuryResource, Server } from '@/types';
+import type { FormOfGovernment, God, Island, LuxuryResource, Server } from '@/types';
 
 const translateServerNumberToName = (number: number): string => {
     switch (number) {

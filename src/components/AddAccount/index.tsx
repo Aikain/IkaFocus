@@ -1,6 +1,6 @@
-import { SubmitEventHandler } from 'react';
+import type { SubmitEventHandler } from 'react';
 
-import { Account, Server } from '@/types';
+import type { Account, Server } from '@/types';
 import { generateServerName } from '@/utils';
 
 import styles from '@/styles/account.module.scss';

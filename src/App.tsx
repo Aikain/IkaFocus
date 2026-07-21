@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import AccountList from '@/components/AccountList';
 import AddAccount from '@/components/AddAccount';
-import { Account, Server } from '@/types';
+import type { Account, Server } from '@/types';
 
 import styles from '@/styles/app.module.scss';
 

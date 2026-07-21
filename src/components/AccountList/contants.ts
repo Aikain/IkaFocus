@@ -13,7 +13,7 @@ import {
     WOOD_REDUCER,
 } from '@/data/building.ts';
 
-import { BuildingKey } from './types';
+import type { BuildingKey } from './types';
 
 const findMaxLevel = (buildingDetails: Record<number, unknown>): number =>
     Math.max(...Object.keys(buildingDetails).map((level) => parseInt(level)));

@@ -1,6 +1,6 @@
-import { SubmitEventHandler } from 'react';
+import type { SubmitEventHandler } from 'react';
 
-import { City, Island, LuxuryResource } from '@/types';
+import type { City, Island, LuxuryResource } from '@/types';
 
 import styles from '@/styles/account.module.scss';
 

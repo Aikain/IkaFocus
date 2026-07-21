@@ -1,5 +1,5 @@
 import { CITY_MAX_COUNT } from '@/data/constant.ts';
-import {
+import type {
     Account,
     City,
     CreateNewCity,
@@ -15,7 +15,7 @@ import {
 import { calculateBuildCost, calculateBuildTotalCost } from '../../utils/building.ts';
 import { getBasicProduction, getCost } from '../../utils/island.ts';
 import { BUILDINGS } from './contants.ts';
-import { BuildingKey } from './types.ts';
+import type { BuildingKey } from './types.ts';
 
 // TODO: premium
 // TODO: Cinetheatre

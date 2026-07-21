@@ -1,5 +1,5 @@
 import Island from '@/components/AccountList/Island.tsx';
-import { Account, Island as IslandType } from '@/types';
+import type { Account, Island as IslandType } from '@/types';
 
 import styles from '@/styles/account.module.scss';
 

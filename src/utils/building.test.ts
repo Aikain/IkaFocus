@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { City } from '@/types';
+import type { City } from '@/types';
 
 import { calculateBuildCost, calculateBuildTotalCost } from './building.ts';
 
