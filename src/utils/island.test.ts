@@ -8,7 +8,7 @@ describe.concurrent('basic production', () => {
     });
 
     test('wood: lvl 17, technocracy', () => {
-        expect(getBasicProduction('wood', 17, false, 'TECHNOCRACY')).toBe(340);
+        expect(getBasicProduction('wood', 17, false, 'TECHNOCRACY')).toBe(339);
     });
 
     test('wood: lvl 44, hh', () => {
@@ -16,11 +16,11 @@ describe.concurrent('basic production', () => {
     });
 
     test('wood: lvl 45, hh, technocracy', () => {
-        expect(getBasicProduction('wood', 45, true, 'TECHNOCRACY')).toBe(1450);
+        expect(getBasicProduction('wood', 45, true, 'TECHNOCRACY')).toBe(1449);
     });
 
     test('wood: lvl 46, hh, technocracy', () => {
-        expect(getBasicProduction('wood', 46, true, 'TECHNOCRACY')).toBe(1495);
+        expect(getBasicProduction('wood', 46, true, 'TECHNOCRACY')).toBe(1493.7);
     });
 
     test('luxury: lvl 1', () => {
@@ -28,7 +28,7 @@ describe.concurrent('basic production', () => {
     });
 
     test('luxury: lvl 23, technocracy', () => {
-        expect(getBasicProduction('luxury', 23, false, 'ARISTOCRACY')).toBe(656);
+        expect(getBasicProduction('luxury', 23, false, 'ARISTOCRACY')).toBe(655);
     });
 
     test('luxury: lvl 38, hh', () => {
@@ -42,11 +42,11 @@ describe.concurrent('basic production', () => {
 
 describe.concurrent('cost', () => {
     test('wood: lvl 2', () => {
-        expect(getCost('UPGRADE_WOOD', 2)).toBe(394);
+        expect(getCost('UPGRADE_WOOD', 2)).toBe(499);
     });
 
     test('wood: lvl 31', () => {
-        expect(getCost('UPGRADE_WOOD', 31)).toBe(1995717);
+        expect(getCost('UPGRADE_WOOD', 31)).toBe(2001829);
     });
 
     test('wood: lvl 46', () => {
@@ -54,7 +54,7 @@ describe.concurrent('cost', () => {
     });
 
     test('wood: lvl 47', () => {
-        expect(getCost('UPGRADE_WOOD', 47)).toBe(61315353);
+        expect(getCost('UPGRADE_WOOD', 47)).toBe(65099540);
     });
 
     test('luxury: lvl 2', () => {
@@ -62,11 +62,11 @@ describe.concurrent('cost', () => {
     });
 
     test('luxury: lvl 25', () => {
-        expect(getCost('UPGRADE_LUXURY', 25)).toBe(1855942);
+        expect(getCost('UPGRADE_LUXURY', 25)).toBe(1746847);
     });
 
     test('luxury: lvl 37', () => {
-        expect(getCost('UPGRADE_LUXURY', 37)).toBe(35747356);
+        expect(getCost('UPGRADE_LUXURY', 37)).toBe(35370086);
     });
 
     test('luxury: lvl 41', () => {
