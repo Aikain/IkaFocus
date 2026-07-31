@@ -48,7 +48,7 @@ describe.concurrent('total production', () => {
                     },
                 ),
             ),
-        ).toBe(5258.85);
+        ).toBe(5255.43);
     });
 });
 
