@@ -168,7 +168,28 @@ const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
                                 alt='Ilotulite testialue'
                             />
                         </th>
-                        <th>AK</th>
+                        <th className={styles.building}>
+                            <img
+                                src='https://gf3.geo.gfsrv.net/cdnbe/3bbcc108d1cdd60dfdf54c7fc5919c.png'
+                                alt='Telakka'
+                            />
+                        </th>
+                        <th className={styles.building}>
+                            <img
+                                src='https://gf3.geo.gfsrv.net/cdne8/81e9eaa7d44e1d81d2f79393cce199.png'
+                                alt='Kauppasatama'
+                            />
+                        </th>
+                        <th className={styles.building}>
+                            <img src='https://gf2.geo.gfsrv.net/cdn7c/b779d2bb2ab17a866fcede88ea6c1f.png' alt='Muuri' />
+                        </th>
+                        <th className={styles.building}>
+                            <img
+                                src='https://gf1.geo.gfsrv.net/cdn09/e98cc531e6d16330e3cc3bc8f4930b.png'
+                                alt='Kaupungintalo'
+                            />
+                        </th>
+                        <th title='Auttavat kädet'>AK</th>
                         <th>
                             <img
                                 src='https://gf1.geo.gfsrv.net/cdn19/c3527b2f694fb882563c04df6d8972.png'
@@ -177,6 +198,8 @@ const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
                         </th>
                         <th>{LUXURY_RESOURCE[island.luxuryResource]}</th>
                         <th>Korruptio</th>
+                        <th>Varusk. maa</th>
+                        <th>Varusk. meri</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -254,6 +277,16 @@ const Island = ({ account, deleteIsland, island, updateIsland }: Props) => {
                                     style: 'unit',
                                     unit: 'percent',
                                 }).format(Math.floor(calculateCorruptionPercent(rest, account)))}
+                            </td>
+                            <td className={styles.production}>
+                                {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+                                    ((rest.wallLevel ?? 0) + (rest.townHallLevel ?? 0)) * 50 + 250,
+                                )}
+                            </td>
+                            <td className={styles.production}>
+                                {new Intl.NumberFormat(undefined, { maximumFractionDigits: 0 }).format(
+                                    Math.max(rest.shipyardLevel ?? 0, rest.tradePortLevel ?? 0) * 25 + 125,
+                                )}
                             </td>
                         </tr>
                     ))}

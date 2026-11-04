@@ -37,4 +37,8 @@ export const BUILDINGS: { name: BuildingKey; min: number; max: number }[] = [
     { name: 'marbleReduceLevel', min: 0, max: findMaxLevel(MARBLE_REDUCER) },
     { name: 'crystalReduceLevel', min: 0, max: findMaxLevel(CRYSTAL_REDUCER) },
     { name: 'sulphurReduceLevel', min: 0, max: findMaxLevel(SULPHUR_REDUCER) },
+    { name: 'shipyardLevel', min: 0, max: 100 },
+    { name: 'tradePortLevel', min: 0, max: 100 },
+    { name: 'wallLevel', min: 0, max: 100 },
+    { name: 'townHallLevel', min: 0, max: 100 },
 ];

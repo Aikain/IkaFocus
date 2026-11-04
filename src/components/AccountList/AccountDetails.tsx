@@ -18,7 +18,7 @@ const AccountDetails = ({ account, updateAccount }: Props) => {
         updateAccount({ ...account, research: e.target.value !== '' ? (e.target.value as Research) : undefined });
 
     return (
-        <div>
+        <div className={styles.accountDetails}>
             <div className={styles.accountDetailRow}>
                 <label htmlFor='formOfGovernment'>Hallintomuoto</label>
                 <select id='formOfGovernment' value={account.formOfGovernment} onChange={handleChangeFormOfGovernment}>

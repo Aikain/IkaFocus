@@ -50,6 +50,10 @@ export interface City {
     marbleReduceLevel?: number;
     crystalReduceLevel?: number;
     sulphurReduceLevel?: number;
+    shipyardLevel?: number;
+    tradePortLevel?: number;
+    wallLevel?: number;
+    townHallLevel?: number;
     shrineLevel?: number;
     selectedGod?: God;
     helpingHands?: boolean;
